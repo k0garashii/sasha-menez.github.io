@@ -2,13 +2,12 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Détails du Projet | Moteur Vulkan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Présentation du projet de collisions 3D dynamiques et de son approche basée sur les sommes de Minkowski.">
+    <title>Collision 3D</title>
     <link rel="stylesheet" href="../../css/annexe.css">
-    <!-- Pour afficher de belles équations maths si besoin -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="project-detail-page" data-page="engine" data-title-key="pageTitle">
+<body class="project-detail-page" data-page="collision3d" data-title-key="pageTitle">
 
     <nav class="detail-nav">
         <a href="/index.html" class="back-btn">
@@ -20,41 +19,55 @@
 
     <main class="detail-container">
         <header class="detail-header">
-            <h1 data-i18n="title">Création d'un moteur de jeu (Vulkan)</h1>
+            <h1 data-i18n="title">Collisions 3D dynamiques</h1>
             <div class="badge-container">
-                <span class="badge">C++</span>
-                <span class="badge">Vulkan</span>
-                <span class="badge" data-i18n="architectureBadge">Architecture logicielle</span>
+                <span class="badge" data-i18n="maths">Mathématiques</span>
+                <span class="badge">Unity</span>
+                <span class="badge" data-i18n="duration-2w">2 semaines</span>
+                <span class="badge" data-i18n="workInProgressBadge">Fiche en préparation</span>
             </div>
         </header>
 
-        <section class="detail-content">
+        <section class="detail-content text-full">
             <div class="detail-text">
-                <h2 data-i18n="objectiveTitle">Objectif du projet</h2>
-                <p data-i18n="objectiveText">L'objectif était de comprendre les couches bas-niveau des API graphiques modernes en implémentant une pipeline de rendu complète.</p>
-                
-                <h2 data-i18n="mathChallengesTitle">Défis Mathématiques</h2>
-                <p data-i18n="mathChallengesText">Pour la gestion des caméras, j'ai dû implémenter des matrices de projection :</p>
-                <!-- Exemple d'équation LaTeX -->
-                <p>\[ P = \begin{pmatrix} \frac{1}{tan(\alpha/2)} & 0 & 0 & 0 \\ 0 & \frac{1}{tan(\alpha/2)} & 0 & 0 \\ 0 & 0 & \frac{f+n}{f-n} & \frac{-2fn}{f-n} \\ 0 & 0 & 1 & 0 \end{pmatrix} \]</p>
-            </div>
-
-            <div class="detail-media">
-                <!-- Ici tu peux mettre une vidéo de ton projet ou une grande image -->
-                <div class="placeholder-media" data-i18n="placeholderVideo">Vidéo du moteur en action</div>
+                <h2 data-i18n="projectOverviewTitle">Aperçu du projet</h2>
+                <p class="detail-lead" data-i18n="summaryText">Projet de simulation visant à recoder des collisions 3D entre une sphère en mouvement et un cube fixe avec une approche géométrique basée sur les sommes de Minkowski.</p>
+                <p data-i18n="overviewText">Cette page est prête à recevoir le détail mathématique et l'implémentation. Les assets présents permettent déjà de documenter le principe et le résultat visuel.</p>
             </div>
         </section>
 
-        <section class="code-section">
-            <h2 data-i18n="codeTitle">Aperçu du Code (C++)</h2>
-            <pre><code>
-// Initialisation de l'instance Vulkan
-VkInstanceCreateInfo createInfo{};
-createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-// ... suite du code
-            </code></pre>
+        <section class="text-top-img-bottom">
+            <div class="content">
+                <h2 data-i18n="pageStatusTitle">État actuel de la page</h2>
+                <p data-i18n="pageStatusText">Cette page a été nettoyée et structurée. Le contenu détaillé sera complété au fur et à mesure avec les informations projet.</p>
+                <h3 data-i18n="keyPointsTitle">Points déjà définis</h3>
+                <p data-i18n-html="keyPointsText">- Projet Unity orienté maths et simulation<br>- Collision entre sphère mobile et cube fixe<br>- Utilisation des sommes de Minkowski<br>- Plusieurs captures déjà disponibles</p>
+                <h3 data-i18n="plannedAdditionsTitle">Ce qui sera ajouté ensuite</h3>
+                <p data-i18n-html="plannedAdditionsText">- Dérivation de l'approche géométrique<br>- Étapes de détection et de résolution de collision<br>- Comparaison entre représentation visuelle et modèle mathématique<br>- Extraits de code si pertinents</p>
+            </div>
+            <div class="media">
+                <img src="Collision_Logo.png" alt="Logo du projet Collision 3D" class="rendered-img" loading="lazy" decoding="async">
+            </div>
+        </section>
+
+        <section class="detail-content text-full">
+            <div>
+                <h2 data-i18n="galleryTitle">Galerie</h2>
+                <div class="gallery-grid">
+                    <figure class="gallery-item">
+                        <img src="Image1.png" alt="Capture du projet Collision 3D 1" loading="lazy" decoding="async">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="Image2.png" alt="Capture du projet Collision 3D 2" loading="lazy" decoding="async">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="Image3.png" alt="Capture du projet Collision 3D 3" loading="lazy" decoding="async">
+                    </figure>
+                </div>
+            </div>
         </section>
     </main>
+
     <script src="../../annexe.js"></script>
 </body>
 </html>

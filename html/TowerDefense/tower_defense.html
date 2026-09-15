@@ -2,13 +2,12 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Détails du Projet | Moteur Vulkan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Présentation du projet Tower Defense développé en C++ et Raylib avec éditeur de carte.">
+    <title>Tower Defense</title>
     <link rel="stylesheet" href="../../css/annexe.css">
-    <!-- Pour afficher de belles équations maths si besoin -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="project-detail-page" data-page="engine" data-title-key="pageTitle">
+<body class="project-detail-page" data-page="tower-defense" data-title-key="pageTitle">
 
     <nav class="detail-nav">
         <a href="/index.html" class="back-btn">
@@ -20,41 +19,39 @@
 
     <main class="detail-container">
         <header class="detail-header">
-            <h1 data-i18n="title">Création d'un moteur de jeu (Vulkan)</h1>
+            <h1 data-i18n="title">Tower Defense</h1>
             <div class="badge-container">
                 <span class="badge">C++</span>
-                <span class="badge">Vulkan</span>
-                <span class="badge" data-i18n="architectureBadge">Architecture logicielle</span>
+                <span class="badge">Raylib</span>
+                <span class="badge" data-i18n="duration-2w">2 semaines</span>
+                <span class="badge" data-i18n="group-2">Groupe de 2</span>
+                <span class="badge" data-i18n="workInProgressBadge">Fiche en préparation</span>
             </div>
         </header>
 
-        <section class="detail-content">
+        <section class="detail-content text-full">
             <div class="detail-text">
-                <h2 data-i18n="objectiveTitle">Objectif du projet</h2>
-                <p data-i18n="objectiveText">L'objectif était de comprendre les couches bas-niveau des API graphiques modernes en implémentant une pipeline de rendu complète.</p>
-                
-                <h2 data-i18n="mathChallengesTitle">Défis Mathématiques</h2>
-                <p data-i18n="mathChallengesText">Pour la gestion des caméras, j'ai dû implémenter des matrices de projection :</p>
-                <!-- Exemple d'équation LaTeX -->
-                <p>\[ P = \begin{pmatrix} \frac{1}{tan(\alpha/2)} & 0 & 0 & 0 \\ 0 & \frac{1}{tan(\alpha/2)} & 0 & 0 \\ 0 & 0 & \frac{f+n}{f-n} & \frac{-2fn}{f-n} \\ 0 & 0 & 1 & 0 \end{pmatrix} \]</p>
-            </div>
-
-            <div class="detail-media">
-                <!-- Ici tu peux mettre une vidéo de ton projet ou une grande image -->
-                <div class="placeholder-media" data-i18n="placeholderVideo">Vidéo du moteur en action</div>
+                <h2 data-i18n="projectOverviewTitle">Aperçu du projet</h2>
+                <p class="detail-lead" data-i18n="summaryText">Projet C++ / Raylib réalisé en 2 semaines avec éditeur de carte personnalisé.</p>
+                <p data-i18n="overviewText">La page détaillée est maintenant prête à être enrichie avec le fonctionnement du jeu, l'éditeur de carte et l'organisation du projet en petit groupe.</p>
             </div>
         </section>
 
-        <section class="code-section">
-            <h2 data-i18n="codeTitle">Aperçu du Code (C++)</h2>
-            <pre><code>
-// Initialisation de l'instance Vulkan
-VkInstanceCreateInfo createInfo{};
-createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-// ... suite du code
-            </code></pre>
+        <section class="text-top-img-bottom">
+            <div class="content">
+                <h2 data-i18n="pageStatusTitle">État actuel de la page</h2>
+                <p data-i18n="pageStatusText">Cette page a été nettoyée et structurée. Le contenu détaillé sera complété au fur et à mesure avec les informations projet.</p>
+                <h3 data-i18n="keyPointsTitle">Points déjà définis</h3>
+                <p data-i18n-html="keyPointsText">- Développé en C++ avec Raylib<br>- Réalisé en 2 semaines<br>- Groupe de 2<br>- Présence d'un éditeur de carte</p>
+                <h3 data-i18n="plannedAdditionsTitle">Ce qui sera ajouté ensuite</h3>
+                <p data-i18n-html="plannedAdditionsText">- Boucle de jeu et systèmes principaux<br>- Fonctionnement de l'éditeur de carte<br>- Architecture du projet<br>- Captures et démonstration si disponibles</p>
+            </div>
+            <div class="media">
+                <img src="TD_Logo.png" alt="Logo du projet Tower Defense" class="rendered-img" loading="lazy" decoding="async">
+            </div>
         </section>
     </main>
+
     <script src="../../annexe.js"></script>
 </body>
 </html>

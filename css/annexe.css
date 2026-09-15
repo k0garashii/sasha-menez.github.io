@@ -1,3 +1,31 @@
+/* ============================================================
+   ANNEXE.CSS — Feuille de style des pages "détail projet"
+   ============================================================
+   Structure du fichier (utilise Ctrl+F sur les titres ci-dessous
+   pour sauter directement à une section) :
+
+   1. VARIABLES & RESET GLOBAL
+   2. STRUCTURE GÉNÉRIQUE DE PAGE (.detail-container, .detail-nav...)
+   3. MÉDIAS & CODE (vidéo, images, blocs <pre>, équations MathJax)
+   4. BLOCS DE MISE EN PAGE TEXTE/IMAGE (text-left-img-right, etc.)
+   5. SECTION TÉLÉCHARGEMENT (.download-*)
+   6. LISTES, GALERIE, PAGINATION
+   7. CLASSES DE SURLIGNAGE DE TEXTE (.highlight-*)
+   8. COLORATION SYNTAXIQUE (.comment, .variable, .type...)
+   9. THÈME SPÉCIFIQUE "ENGINE" (page projet EnigmaEngine)
+      9a. Layout général + nav sticky + TOC (menu burger)
+      9b. Hero (titre, vidéo, visuels d'intro)
+      9c. Grilles de cartes (meta / proof / module / contrib / next)
+      9d. Bloc "physics story" (mise en page longue, dédiée)
+   10. RESPONSIVE (breakpoints 1100px / 768px / 480px / hover:none)
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   1. VARIABLES & RESET GLOBAL
+   Couleurs, hauteur du header, "safe area" pour mobile (encoche),
+   reset des marges/paddings, comportement du scroll.
+   ------------------------------------------------------------ */
 :root {
     --bg-color: #0f172a;
     --card-bg: #1e293b;
@@ -41,6 +69,7 @@ iframe {
     display: block;
 }
 
+/* Espace réservé sous le header fixe sur les pages de détail */
 .project-detail-page {
     padding-top: var(--header-height);
 }
@@ -54,6 +83,8 @@ button,
     user-select: text;
 }
 
+/* Effet de survol générique (léger décalage + ombre) réutilisé
+   par plusieurs boutons */
 button:hover,
 .back-btn:hover,
 .download-btn:hover,
@@ -62,6 +93,14 @@ button:hover,
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
 }
 
+
+/* ------------------------------------------------------------
+   2. STRUCTURE GÉNÉRIQUE DE PAGE
+   Conteneur central, header/titre de page, nav sticky en haut,
+   bouton retour, bouton de langue, badges de tags.
+   ------------------------------------------------------------ */
+
+/* Conteneur central de toute page "détail" (largeur max 900px) */
 .detail-container {
     max-width: 900px;
     margin: 40px auto;
@@ -78,6 +117,7 @@ button:hover,
     margin-bottom: 18px;
 }
 
+/* Vidéo héro en haut de page (ratio 16/9 imposé) */
 .detail-video {
     margin: 20px 0 40px;
     aspect-ratio: 16 / 9;
@@ -93,6 +133,7 @@ button:hover,
     background: #0b1220;
 }
 
+/* Grille 2 colonnes générique pour le contenu (texte / image) */
 .detail-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -100,10 +141,14 @@ button:hover,
     margin-bottom: 50px;
 }
 
+/* Variante pleine largeur (pas d'image, juste du texte) */
 .detail-content.text-full {
     grid-template-columns: 1fr;
 }
 
+/* Barre de navigation collante en haut de chaque page de détail
+   (retour au portfolio + bouton de langue). Le fond se floute
+   grâce à backdrop-filter. */
 .detail-nav {
     display: flex;
     align-items: center;
@@ -117,11 +162,21 @@ button:hover,
     z-index: 100;
 }
 
+.detail-nav-inner {
+    width: auto;
+    margin: 0;
+}
+
+.detail-nav-actions {
+    display: block;
+}
+
+/* Bouton pilule pour changer de langue (FR/EN) */
 .lang-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 44px;
+    min-height: 44px; /* zone tactile confortable sur mobile */
     padding: 10px 16px;
     border-radius: 999px;
     border: 1px solid rgba(56, 189, 248, 0.4);
@@ -139,6 +194,7 @@ button:hover,
     box-shadow: none;
 }
 
+/* Bouton "retour" avec flèche animée au survol */
 .back-btn {
     display: inline-flex;
     align-items: center;
@@ -151,6 +207,13 @@ button:hover,
     border-radius: 8px;
     background: rgba(255, 255, 255, 0.05);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Variante compacte (icône seule sur mobile, voir media query 768px) */
+.back-btn-minimal {
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .back-btn .arrow {
@@ -174,6 +237,7 @@ button:hover,
     position: relative;
 }
 
+/* Rangée de badges/tags (ex: technologies utilisées) */
 .badge-container {
     display: flex;
     flex-wrap: wrap; 
@@ -200,6 +264,196 @@ button:hover,
     border-color: var(--accent-color);
 }
 
+/* =========================================================
+   QUICK ACCESS — section "Project pages" (#engine-pages-title)
+   Grille de cartes-liens vers chaque sous-page du projet.
+   ========================================================= */
+
+.engine-pages {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.engine-pages-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.engine-pages-heading h2 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    line-height: 1.1;
+}
+
+.engine-pages-intro {
+    max-width: 36ch;
+    margin: 0;
+    color: var(--secondary-color);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    text-align: right;
+}
+
+/* Grille des cartes-liens : 2 colonnes sur desktop */
+.engine-page-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    list-style: none;
+}
+
+/* Carte-lien individuelle : icône | texte | flèche, via une
+   grille à 3 colonnes. Fond dégradé + légère lueur radiale
+   révélée au survol (::before). */
+.engine-page-link {
+    position: relative;
+    min-height: 110px;
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr) 22px;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 22px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--text-color);
+    background:
+        linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.75));
+    border: 1px solid rgba(56, 189, 248, 0.16);
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(2, 6, 23, 0.22);
+    transition:
+        transform 0.24s ease,
+        border-color 0.24s ease,
+        background 0.24s ease,
+        box-shadow 0.24s ease;
+}
+
+/* Lueur radiale invisible par défaut, révélée au survol */
+.engine-page-link::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 0% 50%, rgba(56, 189, 248, 0.12), transparent 40%);
+    opacity: 0;
+    transition: opacity 0.24s ease;
+    pointer-events: none;
+}
+
+.engine-page-link:hover,
+.engine-page-link:focus-visible {
+    transform: translateY(-3px);
+    border-color: rgba(56, 189, 248, 0.4);
+    background:
+        linear-gradient(135deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.92));
+    box-shadow: 0 18px 40px rgba(2, 6, 23, 0.32);
+}
+
+.engine-page-link:hover::before,
+.engine-page-link:focus-visible::before {
+    opacity: 1;
+}
+
+.engine-page-link:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 3px;
+}
+
+/* =========================================================
+   Icons
+   ========================================================= */
+
+.engine-page-icon {
+    position: relative;
+    z-index: 1;
+    width: 54px;
+    height: 54px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 54px;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 14px;
+    background: rgba(56, 189, 248, 0.08);
+    color: var(--accent-color);
+    transition:
+        background 0.24s ease,
+        border-color 0.24s ease,
+        transform 0.24s ease;
+}
+
+.engine-page-icon svg {
+    width: 25px;
+    height: 25px;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.engine-page-link:hover .engine-page-icon,
+.engine-page-link:focus-visible .engine-page-icon {
+    border-color: rgba(56, 189, 248, 0.42);
+    background: rgba(56, 189, 248, 0.14);
+    transform: scale(1.04);
+}
+
+/* =========================================================
+   Link content
+   ========================================================= */
+
+.engine-page-link-content {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.engine-page-link-title {
+    color: #f8fafc;
+    font-size: 1.05rem;
+    font-weight: 650;
+    line-height: 1.25;
+}
+
+.engine-page-link-description {
+    color: var(--secondary-color);
+    font-size: 0.86rem;
+    line-height: 1.45;
+}
+
+.engine-page-link-arrow {
+    position: relative;
+    z-index: 1;
+    justify-self: end;
+    color: rgba(248, 250, 252, 0.38);
+    font-size: 1.35rem;
+    transition:
+        color 0.24s ease,
+        transform 0.24s ease;
+}
+
+.engine-page-link:hover .engine-page-link-arrow,
+.engine-page-link:focus-visible .engine-page-link-arrow {
+    color: var(--accent-color);
+    transform: translateX(4px);
+}
+
+
+/* ------------------------------------------------------------
+   3. MÉDIAS & CODE
+   Placeholders d'image, images rendues, blocs <pre>/<code>,
+   équations MathJax responsives.
+   ------------------------------------------------------------ */
+
+/* Rectangle "image à venir" avec bordure en pointillés */
 .placeholder-media {
     background: #1e293b;
     height: 300px;
@@ -214,6 +468,7 @@ button:hover,
     height: 200px;
 }
 
+/* Image "finale" insérée dans le contenu (pas un placeholder) */
 .rendered-img {
     width: 100%;
     height: auto;
@@ -222,23 +477,27 @@ button:hover,
     display: block;
 }
 
+/* Bloc de code : scrollable horizontalement, retour à la ligne
+   forcé pour éviter le débordement sur mobile */
 pre {
     background: #000;
     padding: 20px;
     border-radius: 8px;
     max-width: 100%;
     overflow-x: auto;
-    white-space: pre-wrap;      /* 🔥 clé du responsive */
+    white-space: pre-wrap;      /* clé du responsive */
     word-break: break-word;
     font-family: 'Courier New', monospace;
     -webkit-overflow-scrolling: touch;
 }
 
 pre code {
-    display: block;             /* 🔥 important */
+    display: block;             /* important pour le retour à la ligne */
     font-size: clamp(12px, 3vw, 14px);
 }
 
+/* Conteneur pour formules MathJax : scroll horizontal si la
+   formule est plus large que l'écran */
 .equation {
     width: 100%;
     overflow-x: auto;
@@ -262,6 +521,14 @@ mjx-container {
     margin: 0 auto;
 }
 
+
+/* ------------------------------------------------------------
+   4. BLOCS DE MISE EN PAGE TEXTE/IMAGE
+   4 variantes de blocs "carte" combinant texte + média,
+   utilisées pour raconter les différentes parties d'un projet.
+   ------------------------------------------------------------ */
+
+/* Texte à gauche, image à droite (2 colonnes) */
 .text-left-img-right {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -273,6 +540,7 @@ mjx-container {
     border: 1px solid rgba(56, 189, 248, 0.2);
 }
 
+/* Texte à droite, image à gauche (inverse la précédente via 'order') */
 .text-right-img-left {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -292,6 +560,7 @@ mjx-container {
     order: 1;
 }
 
+/* Texte en haut, image en dessous (1 colonne) */
 .text-top-img-bottom {
     display: grid;
     grid-template-columns: 1fr;
@@ -315,6 +584,7 @@ mjx-container {
     aspect-ratio: 4 / 3;
 }
 
+/* Image en haut, texte en dessous (1 colonne, inverse de la précédente) */
 .img-top-text-bottom {
     display: grid;
     grid-template-columns: 1fr;
@@ -334,6 +604,7 @@ mjx-container {
     order: 1;
 }
 
+/* Titres à l'intérieur des blocs .content ci-dessus */
 .content h2 {
     color: var(--accent-color);
     margin-bottom: 10px;
@@ -346,6 +617,7 @@ mjx-container {
     margin-bottom: 10px;
 }
 
+/* Conteneur générique pour centrer une image/placeholder */
 .media {
     width: 100%;
     display: flex;
@@ -360,7 +632,12 @@ mjx-container {
     min-height: 250px;
 }
 
-/* Section de téléchargement */
+
+/* ------------------------------------------------------------
+   5. SECTION TÉLÉCHARGEMENT
+   Carte "télécharger le projet / le rapport" avec icône,
+   texte et bouton d'action.
+   ------------------------------------------------------------ */
 .download-section {
     margin: 50px 0;
 }
@@ -431,12 +708,18 @@ mjx-container {
     transform: translateY(3px);
 }
 
+
+/* ------------------------------------------------------------
+   6. LISTES, GALERIE, PAGINATION
+   ------------------------------------------------------------ */
+
 .detail-list {
     padding-left: 18px;
     margin: 12px 0 0;
     color: var(--secondary-color);
 }
 
+/* Rangée de boutons d'action (ex: télécharger + voir démo) */
 .detail-actions {
     display: flex;
     gap: 12px;
@@ -444,6 +727,7 @@ mjx-container {
     margin-top: 18px;
 }
 
+/* Grille de captures d'écran responsive (auto-fit) */
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -471,6 +755,7 @@ mjx-container {
     margin-top: 10px;
 }
 
+/* Navigation "projet précédent / projet suivant" en bas de page */
 .detail-pagination {
     display: flex;
     justify-content: space-between;
@@ -483,7 +768,12 @@ mjx-container {
     margin-left: auto;
 }
 
-/* Classes de highlight pour le texte */
+
+/* ------------------------------------------------------------
+   7. CLASSES DE SURLIGNAGE DE TEXTE
+   À utiliser directement dans le texte (ex: <span class="highlight">)
+   pour mettre en valeur des mots-clés.
+   ------------------------------------------------------------ */
 .highlight {
     background-color: rgba(56, 189, 248, 0.3);
     padding: 0px 2px;
@@ -521,8 +811,12 @@ mjx-container {
     font-weight: 500;
 }
 
-/* Nouvelle classe pour les commentaires */
 
+/* ------------------------------------------------------------
+   8. COLORATION SYNTAXIQUE
+   Classes utilisées pour "faux-coloriser" des extraits de code
+   dans les blocs <pre>/<code> (commentaire, variable, type, etc.)
+   ------------------------------------------------------------ */
 .comment {
     color: #76c893;
     font-style: italic;
@@ -545,8 +839,846 @@ mjx-container {
     font-weight: bold;
 }
 
+
+/* ============================================================
+   9. THÈME SPÉCIFIQUE "ENGINE"
+   Tout ce qui suit s'applique uniquement à body[data-page="engine"]
+   ou .engine-page : la page dédiée au projet EnigmaEngine.
+   Ces règles surchargent/étendent les styles génériques ci-dessus.
+   ============================================================ */
+
+body[data-page="engine"] .detail-container {
+    max-width: 900px;
+}
+
+.engine-page .detail-content {
+    gap: 28px;
+    margin-bottom: 32px;
+}
+
+/* Page plus large que les autres pages de détail (1120px) */
+.engine-page .detail-container {
+    max-width: 1120px;
+    margin-top: 24px;
+}
+
+/* --- 9a. Nav sticky + menu burger (table des matières) --- */
+
+.engine-page .detail-nav {
+    display: block;
+    padding: calc(20px + var(--safe-top)) calc(20px + var(--safe-right)) 20px calc(20px + var(--safe-left));
+    background: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(14px);
+    z-index: 140;
+}
+
+.engine-page .detail-nav-inner {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.engine-page .detail-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.engine-page .back-btn-minimal {
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.035);
+}
+
+/* Le header générique (.detail-header) est masqué : la page
+   engine a son propre "hero" personnalisé (voir 9b) */
+.engine-page .detail-header {
+    display: none;
+}
+
+.engine-page .text-left-img-right,
+.engine-page .text-right-img-left,
+.engine-page .text-top-img-bottom,
+.engine-page .img-top-text-bottom {
+    margin-bottom: 32px;
+}
+
+.engine-layout {
+    position: relative;
+}
+
+.engine-main {
+    min-width: 0;
+}
+
+/* Carte "panneau" générique avec dégradé radial en fond,
+   utilisée par les grosses sections (ex: bloc physique) */
+.engine-panel {
+    position: relative;
+    overflow: hidden;
+    padding: 30px;
+    background:
+        radial-gradient(circle at top right, rgba(56, 189, 248, 0.16), transparent 28%),
+        linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.94));
+    border: 1px solid rgba(56, 189, 248, 0.18);
+    border-radius: 22px;
+    box-shadow: 0 16px 40px rgba(2, 6, 23, 0.28);
+}
+
+/* Décalage pour que l'ancrage #section ne soit pas caché
+   sous la nav sticky quand on clique un lien de la TOC */
+.engine-section {
+    scroll-margin-top: 118px;
+}
+
+/* Bouton "burger" (3 barres) qui ouvre le panneau de TOC au survol/clic */
+.engine-toc {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    z-index: 90;
+}
+
+.engine-nav-toc {
+    flex: 0 0 auto;
+}
+
+/* Panneau flottant de la table des matières (masqué par défaut,
+   affiché via :hover / :focus-within / .is-open — géré en JS
+   pour le clic, voir le <script> en bas du HTML) */
+.engine-toc-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 304px;
+    max-height: min(430px, calc(100vh - 180px));
+    padding: 18px;
+    background: rgba(23, 23, 23, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.34);
+    backdrop-filter: blur(16px);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-10px) scale(0.98);
+    transform-origin: top right;
+    transition: opacity 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
+    overflow: hidden;
+}
+
+.engine-toc:hover .engine-toc-panel,
+.engine-toc:focus-within .engine-toc-panel,
+.engine-toc.is-open .engine-toc-panel {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.engine-toc-handle {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    z-index: 2;
+}
+
+.engine-toc-handle-bar {
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.62);
+    transition: background 0.22s ease;
+}
+
+.engine-toc:hover .engine-toc-handle-bar,
+.engine-toc:focus-within .engine-toc-handle-bar,
+.engine-toc.is-open .engine-toc-handle-bar {
+    background: rgba(255, 255, 255, 0.86);
+}
+
+.engine-toc-nav {
+    max-height: min(360px, calc(100vh - 250px));
+    overflow-y: auto;
+    padding-right: 6px;
+    padding-left: 2px;
+}
+
+.engine-toc-nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.engine-toc-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.engine-toc-nav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+}
+
+.engine-toc-eyebrow {
+    margin-bottom: 14px;
+    padding-right: 34px;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+.engine-toc-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Chaque lien de la TOC : numéro à gauche (01, 02...) +
+   titre/sous-titre à droite, via une grille 2 colonnes */
+.engine-toc-link {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: start;
+    column-gap: 10px;
+    padding: 6px 2px;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.74);
+    transition: color 0.22s ease, transform 0.22s ease;
+}
+
+.engine-toc-link:hover,
+.engine-toc-link.is-active {
+    color: var(--text-color);
+    transform: translateX(2px);
+}
+
+.engine-toc-number {
+    display: block;
+    color: rgba(56, 189, 248, 0.92);
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.55;
+    letter-spacing: 0.04em;
+    text-align: right;
+}
+
+.engine-toc-copy {
+    min-width: 0;
+}
+
+.engine-toc-copy strong {
+    display: block;
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: currentColor;
+    overflow-wrap: anywhere;
+}
+
+.engine-toc-copy small {
+    display: block;
+    margin-top: 4px;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+/* Lien actif = la section actuellement visible à l'écran,
+   mis à jour en JS via IntersectionObserver (voir HTML) */
+.engine-toc-link.is-active .engine-toc-copy strong {
+    color: var(--accent-color);
+}
+
+.engine-toc-link.is-active .engine-toc-copy small,
+.engine-toc-link:hover .engine-toc-copy small {
+    color: rgba(255, 255, 255, 0.68);
+}
+
+/* --- 9b. Hero (titre principal + visuels d'intro) --- */
+
+.engine-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    align-items: center;
+    scroll-margin-top: 118px;
+    margin-bottom: 72px;
+}
+
+.engine-hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    max-width: 980px;
+}
+
+.engine-hero-subtitle {
+    max-width: 52ch;
+    color: #c9d7e7;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.96rem;
+    line-height: 1.75;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* Petite pastille avec logo + texte (actuellement pas utilisée
+   dans le HTML actuel, mais le style reste dispo) */
+.engine-logo-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.16);
+    color: var(--secondary-color);
+}
+
+.engine-logo {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 14px;
+}
+
+.engine-hero h1 {
+    font-size: clamp(3.4rem, 8vw, 6.2rem);
+    line-height: 0.95;
+    margin-bottom: 10px;
+}
+
+.engine-manifesto {
+    font-size: clamp(1.24rem, 2.1vw, 1.8rem);
+    line-height: 1.7;
+    color: #dbeafe;
+    margin-bottom: 0;
+    max-width: 34ch;
+}
+
+.engine-hero-intro {
+    color: #b9c8df;
+    max-width: 56ch;
+    margin-top: 4px;
+}
+
+.engine-hero-links-shell {
+    width: 100%;
+    margin-top: 2px;
+}
+
+/* Grille de "cartes meta" (infos rapides sous le hero) */
+.engine-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+}
+
+/* Style commun à toutes les petites cartes du thème engine
+   (meta / proof / module / contrib / next) */
+.engine-meta-card,
+.engine-proof-card,
+.engine-module-card,
+.engine-contrib-card,
+.engine-next-card {
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.46);
+    border: 1px solid rgba(56, 189, 248, 0.14);
+}
+
+.engine-meta-card h2,
+.engine-proof-card h3,
+.engine-module-card h3,
+.engine-contrib-card h3,
+.engine-next-card h3 {
+    color: var(--accent-color);
+    margin-bottom: 8px;
+}
+
+.engine-meta-card h2 {
+    font-size: 0.95rem;
+}
+
+.engine-meta-card p,
+.engine-proof-card p,
+.engine-module-card p,
+.engine-contrib-card p,
+.engine-next-card p {
+    color: #dbe4f4;
+}
+
+/* Visuel principal du hero (grande image + halo lumineux derrière) */
+.engine-hero-media,
+.engine-figure {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+}
+
+.engine-hero-visuals {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    max-width: 1120px;
+}
+
+.engine-hero-media {
+    position: relative;
+}
+
+/* Halo flou (glow) derrière l'image du hero */
+.engine-hero-media::before {
+    content: "";
+    position: absolute;
+    inset: 5% 10% auto;
+    height: 58%;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.2), rgba(56, 189, 248, 0));
+    filter: blur(48px);
+    pointer-events: none;
+}
+
+.engine-hero-media .rendered-img,
+.engine-figure .rendered-img {
+    width: 100%;
+    height: 100%;
+    min-height: 540px;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 28px;
+    border: 1px solid rgba(56, 189, 248, 0.18);
+    box-shadow: 0 26px 80px rgba(2, 6, 23, 0.46), 0 0 0 1px rgba(125, 211, 252, 0.08);
+    position: relative;
+    z-index: 1;
+}
+
+.engine-hero-media figcaption,
+.engine-figure figcaption {
+    color: var(--secondary-color);
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+/* Carte "vidéo à venir" : image de fond assombrie + overlay
+   avec icône play et texte explicatif (placeholder en attendant
+   la vraie vidéo du jeu) */
+.engine-hero-video-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: min(100%, 760px);
+    align-self: center;
+}
+
+.engine-video-placeholder {
+    position: relative;
+    overflow: hidden;
+    min-height: 230px;
+    aspect-ratio: 16 / 9;
+    border-radius: 18px;
+    border: 1px solid rgba(56, 189, 248, 0.18);
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.engine-video-placeholder-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.45) saturate(0.85);
+}
+
+.engine-video-placeholder-overlay {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    padding: 24px;
+    background: linear-gradient(180deg, rgba(10, 15, 30, 0.2), rgba(10, 15, 30, 0.78));
+}
+
+.engine-video-placeholder-overlay strong {
+    font-size: 1.1rem;
+    color: #f8fafc;
+}
+
+.engine-video-placeholder-overlay p {
+    max-width: 34ch;
+    color: #d6e5f8;
+    line-height: 1.55;
+}
+
+.engine-video-placeholder-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.14);
+    border: 1px solid rgba(56, 189, 248, 0.32);
+    color: #e0f2fe;
+    font-size: 1.25rem;
+}
+
+/* Masqué par défaut (badges inline non utilisés pour l'instant) */
+.engine-inline-badges {
+    display: none;
+}
+
+/* Bandeau défilant horizontal ("marquee") pour les cartes de
+   liens rapides vers chaque section — actuellement commenté
+   dans le HTML, mais le style est prêt si tu le réactives */
+.engine-hero-links-marquee {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.engine-hero-links-marquee::-webkit-scrollbar {
+    height: 8px;
+}
+
+.engine-hero-links-marquee::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+}
+
+.engine-hero-links-track {
+    display: flex;
+    gap: 18px;
+    width: max-content;
+    min-width: 100%;
+    padding-right: 24px;
+    animation: engineHeroMarquee 36s linear infinite; /* défilement auto */
+    will-change: transform;
+}
+
+.engine-hero-links-marquee:hover .engine-hero-links-track,
+.engine-hero-links-marquee:focus-within .engine-hero-links-track {
+    animation-play-state: paused; /* pause au survol pour pouvoir cliquer/lire */
+}
+
+.engine-hero-link-card {
+    width: 260px;
+    flex: 0 0 260px;
+    text-decoration: none;
+    border-radius: 24px;
+    overflow: hidden;
+    background: rgba(15, 23, 42, 0.52);
+    border: 1px solid rgba(56, 189, 248, 0.14);
+    box-shadow: 0 14px 36px rgba(2, 6, 23, 0.22);
+    transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
+}
+
+.engine-hero-link-card:hover,
+.engine-hero-link-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(56, 189, 248, 0.28);
+    box-shadow: 0 20px 44px rgba(2, 6, 23, 0.28);
+}
+
+.engine-hero-link-image {
+    display: block;
+    width: 100%;
+    height: 164px;
+    object-fit: cover;
+}
+
+.engine-hero-link-copy {
+    display: block;
+    padding: 16px 18px 18px;
+}
+
+.engine-hero-link-copy strong,
+.engine-hero-link-copy small {
+    display: block;
+}
+
+.engine-hero-link-copy strong {
+    color: #f8fafc;
+    font-size: 1.06rem;
+    font-weight: 600;
+}
+
+.engine-hero-link-copy small {
+    margin-top: 6px;
+    color: var(--secondary-color);
+    line-height: 1.45;
+}
+
+/* Animation du marquee : translate de 0 à -50% (le contenu est
+   dupliqué en JS/HTML pour boucler sans coupure) */
+@keyframes engineHeroMarquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(-50% + 9px));
+    }
+}
+
+/* --- 9c. Petits titres de section + grilles de cartes --- */
+
+/* Petit label au-dessus des titres de section (ex: "TRAVAIL PERSONNEL") */
+.engine-section-label {
+    color: #7dd3fc;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+/* Grilles 2 colonnes réutilisées par plusieurs sections
+   (preuves, modules, contributions, "prochaines étapes") */
+.engine-proof-grid,
+.engine-module-grid,
+.engine-contrib-grid,
+.engine-next-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.engine-module-grid,
+.engine-contrib-grid,
+.engine-next-grid {
+    margin-top: 8px;
+}
+
+.engine-proof-grid {
+    margin-top: 18px;
+}
+
+.engine-inline-badges {
+    margin-top: 14px;
+}
+
+/* Encadré "note" avec liseré coloré à gauche (info complémentaire) */
+.engine-note {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-left: 3px solid var(--accent-color);
+    border-radius: 12px;
+    background: rgba(56, 189, 248, 0.08);
+    color: var(--secondary-color);
+}
+
+/* --- 9d. Bloc "physics story" ---
+   Section longue et détaillée (actuellement commentée dans le
+   HTML) dédiée à l'explication de la partie physique du moteur. */
+
+.engine-physics-story {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.engine-physics-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Bandeau d'accroche coloré en haut du bloc physique */
+.engine-physics-banner {
+    margin-top: -15px;
+    padding: 8px 16px;
+    border-left-width: 0;
+    border-radius: 16px;
+    background:
+        linear-gradient(90deg, rgba(56, 189, 248, 0.18), rgba(56, 189, 248, 0.06)),
+        rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    color: #dbeafe;
+}
+
+.engine-physics-layout {
+    display: block;
+}
+
+.engine-physics-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.engine-physics-copy h3 {
+    color: var(--accent-color);
+    margin-bottom: 0;
+    font-size: clamp(1.55rem, 2.4vw, 2rem);
+    line-height: 1.2;
+}
+
+.engine-physics-copy p + p {
+    margin-top: 14px;
+}
+
+.engine-physics-followup {
+    display: grid;
+    gap: 14px;
+}
+
+/* Grille 3 colonnes pour les mini-cartes détaillées (Body+Collider,
+   Compound collider, Facade runtime) */
+.engine-physics-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+/* Grille 2 colonnes pour les blocs "utilitaires" (rigidbody / transform) */
+.engine-physics-utility-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.engine-physics-figure {
+    width: min(100%, 980px);
+    margin: 2px auto 0;
+}
+
+.engine-physics-figure .rendered-img {
+    min-height: 0;
+    object-fit: contain;
+    padding: 24px;
+    background: rgba(15, 23, 42, 0.52);
+    border-radius: 18px;
+}
+
+.engine-physics-figure figcaption {
+    max-width: 78ch;
+    margin: 12px auto 0;
+    text-align: center;
+}
+
+.engine-physics-points {
+    margin-top: 12px;
+    padding-left: 20px;
+    color: #dbe4f4;
+}
+
+.engine-physics-points li + li {
+    margin-top: 8px;
+}
+
+.engine-page pre {
+    margin-top: 14px;
+    border: 1px solid rgba(56, 189, 248, 0.18);
+}
+
+
+/* ============================================================
+   10. RESPONSIVE
+   Du plus large (1100px) au plus étroit (480px), puis règles
+   spécifiques aux écrans tactiles (hover: none).
+   ============================================================ */
+
+/* --- Tablette / petit desktop (<= 1100px) --- */
+@media (max-width: 1100px) {
+    .engine-toc-panel {
+        top: calc(100% + 10px);
+        right: 0;
+        width: min(260px, calc(100vw - 28px));
+        max-height: min(320px, calc(100vh - 110px));
+    }
+
+    .engine-toc-nav {
+        max-height: min(250px, calc(100vh - 170px));
+    }
+
+    .engine-hero {
+        gap: 34px;
+    }
+
+    .engine-hero-media .rendered-img,
+    .engine-figure .rendered-img {
+        min-height: 420px;
+    }
+
+    /* Les grilles 2-3 colonnes du bloc physique passent en 1 colonne */
+    .engine-physics-intro,
+    .engine-physics-layout,
+    .engine-physics-detail-grid,
+    .engine-physics-utility-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Mobile "large" (<= 768px) --- */
 @media (max-width: 768px) {
+    .engine-page .detail-nav-inner {
+        gap: 10px;
+    }
+    /* Le texte du bouton retour est caché, seule la flèche reste */
+    .engine-page .back-btn-minimal .text {
+        display: none;
+    }
+    /* Quick Access : l'en-tête passe en colonne (texte aligné à
+    gauche) et la grille de cartes passe à 1 seule colonne */
+    .engine-pages-heading {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .engine-pages-intro {
+        max-width: 55ch;
+        text-align: left;
+    }
+    .engine-page-links {
+        grid-template-columns: 1fr;
+    }
     .detail-content { grid-template-columns: 1fr; }
+    .engine-logo-chip {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+    .engine-hero h1 {
+        font-size: clamp(2.8rem, 13vw, 4.2rem);
+    }
+    .engine-manifesto {
+        max-width: 18ch;
+    }
+    .engine-hero-media .rendered-img,
+    .engine-figure .rendered-img {
+        min-height: 300px;
+        border-radius: 22px;
+    }
+    .engine-hero-link-card {
+        width: 220px;
+        flex-basis: 220px;
+    }
+    .engine-hero-link-image {
+        height: 144px;
+    }
     .block { 
         grid-template-columns: 1fr; 
         gap: 20px;
@@ -566,6 +1698,7 @@ mjx-container {
     .detail-pagination .back-btn {
         justify-content: center;
     }
+    /* Zones tactiles minimum 44px de hauteur (accessibilité mobile) */
     .back-btn,
     .download-btn,
     .detail-pagination .back-btn {
@@ -575,6 +1708,7 @@ mjx-container {
         margin-left: 0;
         text-align: left !important;
     }
+    /* Les blocs texte/image génériques passent en 1 colonne */
     .text-left-img-right {
         display: grid;
         grid-template-columns: 1fr;
@@ -596,8 +1730,30 @@ mjx-container {
         height: auto;
         max-height: 70vh;
     }
+
+    .engine-page .text-left-img-right,
+    .engine-page .text-right-img-left,
+    .engine-page .text-top-img-bottom,
+    .engine-page .img-top-text-bottom {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .engine-page .text-right-img-left .content,
+    .engine-page .text-right-img-left .media {
+        order: initial;
+    }
+
+    .engine-proof-grid,
+    .engine-module-grid,
+    .engine-contrib-grid,
+    .engine-next-grid,
+    .engine-meta-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
+/* --- Petit mobile (<= 480px) --- */
 @media (max-width: 480px) {
     .detail-container {
         margin: 30px auto;
@@ -625,6 +1781,7 @@ mjx-container {
         order: initial;
     }
 
+    /* Boutons agrandis pour faciliter le tap sur petit écran */
     .back-btn,
     .lang-toggle {
         min-width: 60px;
@@ -632,8 +1789,40 @@ mjx-container {
         padding: 16px 22px;
         font-size: 1.1rem;
     }
+
+    /* Quick Access : cartes resserrées, description masquée pour
+    ne garder que icône + titre + flèche sur très petit écran */
+    .engine-page-link {
+        min-height: 96px;
+        grid-template-columns: 44px minmax(0, 1fr) 16px;
+        gap: 12px;
+        padding: 14px;
+        border-radius: 14px;
+    }
+    .engine-page-icon {
+        width: 44px;
+        height: 44px;
+        flex-basis: 44px;
+        border-radius: 12px;
+    }
+    .engine-page-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+    .engine-page-link-title {
+        font-size: 0.98rem;
+    }
+    .engine-page-link-description {
+        display: none;
+    }
+    .engine-page-link-arrow {
+        font-size: 1.1rem;
+    }
 }
 
+/* --- Appareils tactiles (pas de vrai survol) ---
+   On désactive/atténue les effets :hover pour éviter qu'ils
+   restent "collés" après un tap sur mobile/tablette tactile. */
 @media (hover: none) {
     .lang-toggle:hover {
         background: rgba(56, 189, 248, 0.1);
@@ -672,6 +1861,7 @@ mjx-container {
     }
 }
 
+/* --- Retouche finale petit mobile --- */
 @media (max-width: 480px) {
     .back-btn,
     .download-btn,
@@ -695,6 +1885,6 @@ mjx-container {
     }
 
     mjx-container {
-        font-size: 75% !important; /* Encore plus petit sur très petits écrans */
+        font-size: 75% !important; /* encore plus petit sur très petits écrans */
     }
 }

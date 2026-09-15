@@ -2,7 +2,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Détails du Projet | Moteur Vulkan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Présentation du projet Chromestesia, un jeu d'action 2.5D réalisé sous Unity.">
+    <title>Chromestesia</title>
     <link rel="stylesheet" href="../../css/annexe.css">
 </head>
 <body class="project-detail-page" data-page="chromestesia" data-title-key="pageTitle">
@@ -19,37 +21,50 @@
         <header class="detail-header">
             <h1 data-i18n="title">Action 2.5D Unity</h1>
             <div class="badge-container">
-                <span class="badge">C++</span>
-                <span class="badge">Vulkan</span>
-                <span class="badge" data-i18n="architectureBadge">Architecture logicielle</span>
+                <span class="badge">Unity</span>
+                <span class="badge" data-i18n="duration-3m">3 mois</span>
+                <span class="badge" data-i18n="crossCurriculum">Inter-cursus</span>
+                <span class="badge" data-i18n="workInProgressBadge">Fiche en préparation</span>
             </div>
         </header>
 
-        <section class="detail-content">
+        <section class="detail-content text-full">
             <div class="detail-text">
-                <h2 data-i18n="objectiveTitle">Objectif du projet</h2>
-                <p data-i18n="objectiveText">L'objectif était de comprendre les couches bas-niveau des API graphiques modernes en implémentant une pipeline de rendu complète.</p>
-                
-                <h2 data-i18n="challengesTitle">Défis</h2>
+                <h2 data-i18n="projectOverviewTitle">Aperçu du projet</h2>
+                <p class="detail-lead" data-i18n="summaryText">Projet inter-cursus réalisé sur Unity autour d'un jeu d'action 2.5D en collaboration avec d'autres spécialités.</p>
+                <p data-i18n="overviewText">La page détaillée part désormais d'une base propre. Elle servira à présenter le contexte de production, le rôle exact tenu sur le projet, les mécaniques principales et les choix techniques.</p>
             </div>
+        </section>
 
-            <div class="detail-media">
-                <div class="placeholder-media">
-                    <img src="Chromestesia_Logo.png" alt="Logo du projet Chromestesia" loading="lazy" decoding="async">
+        <section class="text-top-img-bottom">
+            <div class="content">
+                <h2 data-i18n="pageStatusTitle">État actuel de la page</h2>
+                <p data-i18n="pageStatusText">Cette page a été nettoyée et structurée. Le contenu détaillé sera complété au fur et à mesure avec les informations projet.</p>
+                <h3 data-i18n="keyPointsTitle">Points déjà définis</h3>
+                <p data-i18n-html="keyPointsText">- Projet inter-cursus<br>- Développé sous Unity<br>- Période de 3 mois<br>- Logo et captures déjà disponibles</p>
+                <h3 data-i18n="plannedAdditionsTitle">Ce qui sera ajouté ensuite</h3>
+                <p data-i18n-html="plannedAdditionsText">- Présentation du gameplay et de la boucle de jeu<br>- Répartition du travail dans l'équipe<br>- Contraintes techniques rencontrées<br>- Vidéo ou démonstration jouable si disponible</p>
+            </div>
+            <div class="media">
+                <img src="Chromestesia_Logo.png" alt="Logo du projet Chromestesia" class="rendered-img" loading="lazy" decoding="async">
+            </div>
+        </section>
+
+        <section class="detail-content text-full">
+            <div>
+                <h2 data-i18n="galleryTitle">Galerie</h2>
+                <div class="gallery-grid">
+                    <figure class="gallery-item">
+                        <img src="Chromestesia_Screen_1.png" alt="Capture du projet Chromestesia 1" loading="lazy" decoding="async">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="Chromestesia_Screen_2.png" alt="Capture du projet Chromestesia 2" loading="lazy" decoding="async">
+                    </figure>
                 </div>
             </div>
         </section>
-
-        <section class="code-section">
-            <h2 data-i18n="codeTitle">Aperçu du Code (C++)</h2>
-            <pre><code>
-// Initialisation de l'instance Vulkan
-VkInstanceCreateInfo createInfo{};
-createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-// ... suite du code
-            </code></pre>
-        </section>
     </main>
+
     <script src="../../annexe.js"></script>
 </body>
 </html>

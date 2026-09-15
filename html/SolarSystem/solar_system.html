@@ -2,9 +2,10 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Solar System Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Présentation d'une simulation du système solaire sous Unity, basée sur l'algorithme de Verlet et la gestion des champs gravitationnels.">
+    <title>Système solaire</title>
     <link rel="stylesheet" href="../../css/annexe.css">
-    <!-- Pour afficher de belles équations maths si besoin -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
@@ -20,40 +21,82 @@
 
     <main class="detail-container">
         <header class="detail-header">
-            <h1 data-i18n="title">Solar System Simulation</h1>
+            <h1 data-i18n="title">Simulation de système solaire</h1>
             <div class="badge-container">
-                <span class="badge" data-i18n="physicsBadge">Physique</span>
-                <span class="badge" data-i18n="mathBadge">Mathématiques</span>
-                <span class="badge" data-i18n="simulationBadge">Simulation</span>
+                <span class="badge" data-i18n="maths">Mathématiques</span>
+                <span class="badge" data-i18n="physics">Physique</span>
+                <span class="badge">Unity</span>
+                <span class="badge" data-i18n="duration-2w">2 semaines</span>
+                <span class="badge" data-i18n="group-3">Groupe de 3</span>
             </div>
         </header>
 
-        <section class="detail-content">
+        <section class="detail-content text-full">
             <div class="detail-text">
-                <h2 data-i18n="projectDescriptionTitle">Description du projet</h2>
-                <p data-i18n="projectDescriptionText">Description a venir.</p>
-
-                <h2 data-i18n="mathChallengesTitle">Défis Mathématiques</h2>
-                <p data-i18n="mathChallengesText">Description a venir.</p>
-
-                <h2 data-i18n="mathDescriptionTitle">Description mathématique</h2>
-                <p data-i18n="mathDescriptionText">Description a venir.</p>
-            </div>
-
-            <div class="detail-media">
-                <h2 data-i18n="videoTitle">Vidéo</h2>
-                <div class="placeholder-media" data-i18n="placeholderVideo">Video a venir</div>
+                <h2 data-i18n="projectOverviewTitle">Aperçu du projet</h2>
+                <p class="detail-lead" data-i18n="summaryText">Projet réalisé dans le cadre des cours sur Unity en 2 semaines pour reproduire le système solaire à l'aide de champs gravitationnels et de l'algorithme de Verlet.</p>
+                <p data-i18n="overviewText">L'objectif était de reproduire le comportement global du système solaire dans une simulation temps réel exploitable visuellement. Le projet mêle modélisation physique, intégration numérique, analyse dimensionnelle et habillage visuel du résultat.</p>
             </div>
         </section>
 
-        <section class="detail-content">
-            <div class="detail-text">
-                <h2 data-i18n="visualTitle">Représentation visuelle</h2>
-                <p data-i18n="visualText">Description a venir.</p>
+        <section class="text-left-img-right">
+            <div class="content">
+                <h2 data-i18n="objectiveTitle">Objectif du projet</h2>
+                <p data-i18n="objectiveText">Le projet consistait à reproduire le système solaire dans Unity en simulant les interactions gravitationnelles entre les corps célestes. Pour cela, nous avons utilisé l'algorithme de Verlet afin d'intégrer les mouvements, tout en adaptant l'échelle des distances et du temps pour rendre la simulation stable et lisible.</p>
+                <h3 data-i18n="keyPointsTitle">Points déjà définis</h3>
+                <p data-i18n-html="keyPointsText">- Projet réalisé dans le cadre des cours<br>- Développé sous Unity en 2 semaines<br>- Reproduction du système solaire<br>- Simulation basée sur l'algorithme de Verlet</p>
+            </div>
+            <div class="media">
+                <img src="image1.png" alt="Vue principale de la simulation du système solaire" class="rendered-img" loading="lazy" decoding="async">
             </div>
         </section>
 
+        <section class="text-top-img-bottom">
+            <div class="content">
+                <h2 data-i18n="mathChallengesTitle">Défis mathématiques</h2>
+                <p data-i18n-html="solarChallenges">- Appliquer des formules physiques dans une simulation exploitable<br>- Gérer les ordres de grandeur gigantesques du système solaire dans Unity<br>- Régler l'écoulement du temps pour conserver des orbites lisibles<br>- Coordonner le travail de groupe dans un délai court<br>- Habiller le projet pour obtenir un rendu clair et présentable</p>
+                <h3 data-i18n="verletTitle">Simulation gravitationnelle et algorithme de Verlet</h3>
+                <p data-i18n="verletText">Chaque astre reçoit une accélération issue du champ gravitationnel généré par les autres corps. L'algorithme de Verlet permet ensuite d'actualiser les positions de manière stable, en limitant les dérives numériques et en conservant un comportement orbital crédible sur la durée.</p>
+                <p class="equation">\[ \vec{F}_{12} = -G \frac{m_1 m_2}{r^3}\vec{r} \]</p>
+                <p class="equation">\[ \vec{x}_{t+\Delta t} = 2\vec{x}_t - \vec{x}_{t-\Delta t} + \vec{a}_t \Delta t^2 \]</p>
+                <h3 data-i18n="scaleTitle">Gestion des échelles et du temps</h3>
+                <p data-i18n="scaleText">Un des enjeux majeurs du projet était de faire cohabiter dans Unity des masses, distances et vitesses gigantesques. Il a fallu travailler l'analyse dimensionnelle, choisir des facteurs d'échelle cohérents et accélérer le temps de manière contrôlée pour garder une simulation lisible, stable et démonstrative.</p>
+            </div>
+            <div class="media">
+                <img src="image2.png" alt="Vue de la simulation utilisée pour illustrer les orbites" class="rendered-img" loading="lazy" decoding="async">
+            </div>
+        </section>
+
+        <section class="detail-content text-full">
+            <div class="detail-text">
+                <h2 data-i18n="roleTitle">Travail réalisé sur le projet</h2>
+                <p data-i18n="roleText">Je me suis particulièrement concentré sur l'application de l'algorithme de Verlet, l'analyse dimensionnelle de la simulation et l'habillage du projet pour rendre le résultat clair et présentable.</p>
+                <h3 data-i18n="plannedAdditionsTitle">Ce qui sera ajouté ensuite</h3>
+                <p data-i18n-html="plannedAdditionsText">- Détail complet des hypothèses de modélisation<br>- Ajustements de temps et d'échelle selon les besoins<br>- Éventuels détails supplémentaires sur le travail d'équipe</p>
+            </div>
+        </section>
+
+        <section class="detail-content text-full">
+            <div>
+                <h2 data-i18n="galleryTitle">Galerie</h2>
+                <div class="gallery-grid">
+                    <figure class="gallery-item">
+                        <img src="SolarSystem_Logo.avif" alt="Logo du projet système solaire" loading="lazy" decoding="async">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="image3.png" alt="Capture du projet système solaire 3" loading="lazy" decoding="async">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="image4.png" alt="Capture du projet système solaire 4" loading="lazy" decoding="async">
+                    </figure>
+                    <figure class="gallery-item">
+                        <img src="image5.png" alt="Capture du projet système solaire 5" loading="lazy" decoding="async">
+                    </figure>
+                </div>
+            </div>
+        </section>
     </main>
+
     <script src="../../annexe.js"></script>
 </body>
 </html>
