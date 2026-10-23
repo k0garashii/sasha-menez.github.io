@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!-- ================================================================
+     SOUS-PAGE EnigmaEngine : Équipe & Bilan
+     Textes : français dans le HTML, anglais dans ./engine-i18n.js
+     (clés sous "engine-team"). Table des matières : sections [data-toc]
+     ================================================================ -->
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Organisation de l'équipe EnigmaEngine, répartition du travail, état du moteur et prochaines étapes.">
+	<title>Équipe &amp; Bilan | EnigmaEngine</title>
+	<link rel="stylesheet" href="../../css/annexe.css">
+</head>
+<body class="project-detail-page engine-page" data-page="engine-team" data-title-key="pageTitle">
+	<nav class="detail-nav">
+		<div class="detail-nav-inner">
+			<a href="./engine.html" class="back-btn back-btn-minimal">
+				<span class="arrow">&larr;</span>
+				<span class="text" data-i18n="backToEngine">Retour</span>
+			</a>
+			<div class="detail-nav-actions">
+				<button class="lang-toggle" id="lang-toggle" type="button" aria-label="Changer la langue">EN</button>
+				<aside class="engine-toc engine-nav-toc" id="engine-toc">
+					<button class="engine-toc-handle" id="engine-toc-toggle" type="button" aria-expanded="false" aria-controls="engine-toc-nav" aria-label="Afficher la table des matières" data-i18n-aria="tocToggle">
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+					</button>
+					<div class="engine-toc-panel">
+						<p class="engine-toc-eyebrow" data-i18n="tocTitle">Sur cette page</p>
+						<nav class="engine-toc-nav" id="engine-toc-nav" aria-label="Sur cette page" data-i18n-aria="tocTitle"><ol class="engine-toc-list"></ol></nav>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</nav>
+
+	<main class="detail-container engine-layout">
+		<div class="engine-main">
+
+			<header class="engine-subhero engine-section" id="intro" data-toc>
+				<span class="engine-owner engine-owner--team" data-i18n="ownerTeam">Travail d'équipe</span>
+				<p class="engine-section-label" data-i18n="introLabel">Projet de cours</p>
+				<h1 data-i18n="title">Équipe &amp; Bilan</h1>
+				<p class="detail-lead" data-i18n="lead">EnigmaEngine a été construit à trois, du 10 mars au 20 mai 2026. Cette page sépare clairement ce que j'ai construit de ce que l'équipe a construit ensemble, puis fait le point sur ce qui est solide, ce qui est jeune et ce qui vient ensuite.</p>
+			</header>
+
+			<section class="engine-panel engine-block engine-section" id="team" data-toc>
+				<p class="engine-section-label" data-i18n="teamLabel">Organisation</p>
+				<h2 data-i18n="teamTitle">L'équipe et sa façon de travailler</h2>
+				<div class="engine-card-grid">
+					<article class="engine-module-card">
+						<h3>Eliott Blesz</h3>
+						<p data-i18n="member1">Développeur moteur</p>
+					</article>
+					<article class="engine-module-card">
+						<h3>Ugo Szemberg</h3>
+						<p data-i18n="member2">Développeur moteur</p>
+					</article>
+					<article class="engine-module-card">
+						<h3>Sasha Menez</h3>
+						<p data-i18n="member3">Physique, scripting, audio, outils</p>
+					</article>
+				</div>
+				<div class="engine-card-grid engine-card-grid--2">
+					<article class="engine-module-card">
+						<h3 data-i18n="flow1Title">Git et branches</h3>
+						<p data-i18n="flow1Text">Une organisation GitHub commune, une branche par grand chantier (renderer, editor, IA) fusionnées dans dev puis dans main.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="flow2Title">Build reproductible</h3>
+						<p data-i18n="flow2Text">CMake avec presets et FetchContent : les 12 dépendances (Jolt, ImGui, RTTR, Assimp, miniaudio, ENet...) sont téléchargées et compilées automatiquement, sans installation manuelle.</p>
+					</article>
+				</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="split" data-toc>
+				<p class="engine-section-label" data-i18n="splitLabel">Qui a fait quoi</p>
+				<h2 data-i18n="splitTitle">Mes contributions et le travail commun</h2>
+				<div class="engine-card-grid engine-card-grid--2">
+					<article class="engine-contrib-card">
+						<span class="engine-owner" data-i18n="ownerPersonal">Travail personnel</span>
+						<ul data-i18n-html="mineList">
+							<li><a href="./physics.html">Physique</a> : intégration de Jolt, Physicalbody, colliders, collisions vers les scripts, VehicleController</li>
+							<li><a href="./scripting.html">Scripting &amp; hot reload</a> : réflexion générée, compilation et rechargement de DLL</li>
+							<li><a href="./audio.html">Audio</a> : système miniaudio et son moteur par couches de régime</li>
+							<li><a href="./tools.html">Outils</a> (après le projet) : UUID, undo / redo, duplication</li>
+							<li><a href="./ai-chat-action.html">IA</a> (après le projet) : console IA locale</li>
+						</ul>
+					</article>
+					<article class="engine-contrib-card">
+						<span class="engine-owner engine-owner--team" data-i18n="ownerTeam">Travail d'équipe</span>
+						<ul data-i18n-html="teamList">
+							<li><a href="./rendering.html">Rendu</a> : RHI, pipeline différé, ombres, post-process</li>
+							<li><a href="./tools.html">Éditeur</a> : panneaux ImGui, gizmos, material editor</li>
+							<li><a href="./serialisation.html">Réflexion &amp; sérialisation</a> : RTTR, scènes, prefabs</li>
+							<li>Ressources, maths, entrées, réseau ENet</li>
+							<li>Démo de course : voitures, circuit, menus, caméras</li>
+						</ul>
+					</article>
+				</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="status" data-toc>
+				<p class="engine-section-label" data-i18n="statusLabel">Bilan honnête</p>
+				<h2 data-i18n="statusTitle">Où en est le moteur</h2>
+				<div class="engine-card-grid">
+					<article class="engine-module-card">
+						<h3 data-i18n="solidTitle">Solide</h3>
+						<p data-i18n="solidText">Rendu différé PBR, physique Jolt et véhicule, hot reload, éditeur, sérialisation et mode play : tout cela sert déjà la démo jouable.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="youngTitle">Encore jeune</h3>
+						<p data-i18n="youngText">Le RHI n'a qu'un backend, le réseau synchronise positions et rotations sans prédiction, et l'architecture reste une hiérarchie de composants plutôt qu'un vrai ECS.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="nextTitle">Ensuite</h3>
+						<p data-i18n="nextText">Actions de l'IA, layers de collision configurables, requêtes physiques pour les scripts, bus audio et un second backend graphique.</p>
+					</article>
+				</div>
+				<div class="engine-note" data-i18n="lessonNote">Ce que je retiens : un moteur se juge à ce qu'il permet de produire. Chaque brique que j'ai prise en charge a été pensée pour servir la démo de course, et c'est cette contrainte qui a donné la forme du code.</div>
+			</section>
+
+			<nav class="engine-pager" aria-label="Pages du moteur" data-i18n-aria="pagerLabel">
+				<a href="./ai-chat-action.html"><small data-i18n="pagerPrev">← Précédent</small><span data-i18n="navAi">IA : chat et actions</span></a>
+				<a class="engine-pager-next" href="./gallery.html"><small data-i18n="pagerNext">Suivant →</small><span data-i18n="navGallery">Galerie</span></a>
+			</nav>
+		</div>
+	</main>
+	<script src="./engine-i18n.js"></script>
+	<script src="../../annexe.js"></script>
+	<script src="./engine-toc.js"></script>
+</body>
+</html>

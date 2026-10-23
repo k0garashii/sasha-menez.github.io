@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!-- ================================================================
+     SOUS-PAGE EnigmaEngine : Scripting & Hot Reload (travail personnel)
+     Textes : français dans le HTML, anglais dans ./engine-i18n.js
+     (clés sous "engine-scripting"). Table des matières : sections [data-toc]
+     ================================================================ -->
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Scripting C++ et hot reload dans EnigmaEngine : réflexion générée, compilation CMake et rechargement de DLL depuis l'éditeur.">
+	<title>Scripting &amp; Hot Reload | EnigmaEngine</title>
+	<link rel="stylesheet" href="../../css/annexe.css">
+</head>
+<body class="project-detail-page engine-page" data-page="engine-scripting" data-title-key="pageTitle">
+	<nav class="detail-nav">
+		<div class="detail-nav-inner">
+			<a href="./engine.html" class="back-btn back-btn-minimal">
+				<span class="arrow">&larr;</span>
+				<span class="text" data-i18n="backToEngine">Retour</span>
+			</a>
+			<div class="detail-nav-actions">
+				<button class="lang-toggle" id="lang-toggle" type="button" aria-label="Changer la langue">EN</button>
+				<aside class="engine-toc engine-nav-toc" id="engine-toc">
+					<button class="engine-toc-handle" id="engine-toc-toggle" type="button" aria-expanded="false" aria-controls="engine-toc-nav" aria-label="Afficher la table des matières" data-i18n-aria="tocToggle">
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+					</button>
+					<div class="engine-toc-panel">
+						<p class="engine-toc-eyebrow" data-i18n="tocTitle">Sur cette page</p>
+						<nav class="engine-toc-nav" id="engine-toc-nav" aria-label="Sur cette page" data-i18n-aria="tocTitle"><ol class="engine-toc-list"></ol></nav>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</nav>
+
+	<main class="detail-container engine-layout">
+		<div class="engine-main">
+
+			<header class="engine-subhero engine-section" id="intro" data-toc>
+				<span class="engine-owner" data-i18n="ownerPersonal">Travail personnel</span>
+				<p class="engine-section-label" data-i18n="introLabel">Gameplay en C++</p>
+				<h1 data-i18n="title">Scripting &amp; Hot Reload</h1>
+				<p class="detail-lead" data-i18n="lead">Je voulais retrouver le confort d'Unreal : écrire un script de gameplay en C++, cliquer sur Hot-Reload, et voir ses variables apparaître dans l'inspecteur sans relancer l'éditeur ni perdre la scène.</p>
+				<ul class="engine-tags">
+					<li>C++20</li>
+					<li>DLL</li>
+					<li>RTTR</li>
+					<li>CMake</li>
+					<li>Code generation</li>
+				</ul>
+			</header>
+
+			<section class="engine-panel engine-block engine-section" id="api" data-toc>
+				<p class="engine-section-label" data-i18n="apiLabel">Côté utilisateur</p>
+				<h2 data-i18n="apiTitle">Écrire un script</h2>
+				<p data-i18n-html="apiText1">Un script hérite de <code>Script&lt;T&gt;</code> et marque ses variables éditables avec <code>ENIGMA_PROPERTY()</code>. C'est tout : pas de fonction d'enregistrement à écrire à la main.</p>
+<pre><code>class Test : public Script&lt;Test&gt;
+{
+    ENIGMA_CLASS(Test)
+public:
+    ENIGMA_PROPERTY()
+    float speed = 5.0f;
+};</code></pre>
+				<p data-i18n-html="apiText2">Le <code>ScriptManager</code> appelle ensuite le cycle de vie classique d'un moteur de jeu : <code>Awake</code>, <code>Start</code>, <code>Update</code>, <code>FixedUpdate</code> (au rythme de la physique), <code>LateUpdate</code> et <code>End</code>, plus <code>OnCollisionEnter / Stay / Exit</code> venant de la couche physique. Les scripts sont rangés dans une liste par étape, et l'éditeur peut générer un nouveau script à partir d'un modèle.</p>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="reflection" data-toc>
+				<p class="engine-section-label" data-i18n="reflLabel">Génération de code</p>
+				<h2 data-i18n="reflTitle">Une réflexion générée automatiquement</h2>
+				<p data-i18n-html="reflText1">L'inspecteur du moteur repose sur RTTR : il n'affiche que ce qui est enregistré dans la réflexion. Plutôt que de demander à l'utilisateur d'écrire ces enregistrements, le moteur les génère :</p>
+				<ol class="engine-flow">
+					<li data-i18n-html="reflStep1"><strong>Lecture des headers</strong>Le dossier de scripts est parcouru à la recherche de <code>ENIGMA_CLASS</code> et <code>ENIGMA_PROPERTY</code>.</li>
+					<li data-i18n-html="reflStep2"><strong>properties.json</strong>Classes, types et valeurs par défaut sont écrits dans un fichier intermédiaire.</li>
+					<li data-i18n-html="reflStep3"><strong>generated_reflection.cpp</strong>Un fichier C++ enregistre chaque classe dans RTTR avec les métadonnées d'UI de l'inspecteur.</li>
+					<li data-i18n-html="reflStep4"><strong>Points d'entrée exportés</strong><code>EnigmaRegisterScriptReflection</code> et <code>Unregister</code> sont exportés par la DLL.</li>
+				</ol>
+				<p data-i18n-html="reflText2">Le type C++ choisit le widget : un <code>float</code> devient un champ glissant, un <code>bool</code> une case à cocher, un <code>Vector3D</code> trois champs, un <code>GameObject*</code> une référence d'objet. Chaque script est aussi ajouté à la liste des composants de l'éditeur, avec son icône.</p>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="pipeline" data-toc>
+				<p class="engine-section-label" data-i18n="pipeLabel">Le cœur du système</p>
+				<h2 data-i18n="pipeTitle">Le pipeline de hot reload</h2>
+				<p data-i18n="pipeText1">Le rechargement est une vraie chaîne de production, lancée dans une tâche asynchrone pour ne pas bloquer l'éditeur pendant la compilation :</p>
+				<ol class="engine-flow">
+					<li data-i18n-html="pipeStep1"><strong>Déchargement</strong>Les scripts sont désinscrits, leur réflexion et leurs caches d'inspecteur effacés.</li>
+					<li data-i18n-html="pipeStep2"><strong>Génération</strong>JSON puis <code>generated_reflection.cpp</code>.</li>
+					<li data-i18n-html="pipeStep3"><strong>Compilation</strong><code>cmake --fresh</code> puis <code>cmake --build</code> sur le projet de scripts, sortie dans <code>build_log.txt</code>.</li>
+					<li data-i18n-html="pipeStep4"><strong>Promotion</strong>La DLL et le PDB les plus récents sont copiés à l'emplacement attendu.</li>
+					<li data-i18n-html="pipeStep5"><strong>Chargement</strong>Copie versionnée <code>script_reloaded_N.dll</code>, puis <code>LoadLibrary</code> et enregistrement de la réflexion.</li>
+					<li data-i18n-html="pipeStep6"><strong>Réattache</strong>Les scripts et leurs valeurs sont recollés aux bons objets de la scène grâce à leur UUID.</li>
+				</ol>
+<pre><code>auto AsyncHotReload = []()
+{
+    UnloadScripts();
+    LibLoader::WriteInJson();
+    LibLoader::CreateCppFromJson();
+    if (!LibLoader::CompileScript()) return;
+    if (!LibLoader::LoadScriptDLL())  return;
+    Serializer::GetInstance().AttachedScript(SceneManager::GetInstance().GetCurrentScene());
+};
+Async::GetInstance().CreateTask(AsyncHotReload);</code></pre>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="problems" data-toc>
+				<p class="engine-section-label" data-i18n="probLabel">Ce qui a résisté</p>
+				<h2 data-i18n="probTitle">Problèmes résolus</h2>
+				<div class="engine-card-grid">
+					<article class="engine-contrib-card">
+						<h3 data-i18n="prob1Title">DLL verrouillée</h3>
+						<p data-i18n="prob1Text">Windows verrouille une DLL chargée : impossible de la réécrire pendant que l'éditeur tourne. Le moteur charge donc une copie numérotée, et la DLL d'origine reste libre pour la compilation suivante.</p>
+					</article>
+					<article class="engine-contrib-card">
+						<h3 data-i18n="prob2Title">Réflexion périmée</h3>
+						<p data-i18n="prob2Text">Sans précaution, RTTR garderait des types pointant vers le code de l'ancienne DLL. Chaque DLL exporte donc sa propre fonction de désinscription, appelée avant le FreeLibrary.</p>
+					</article>
+					<article class="engine-contrib-card">
+						<h3 data-i18n="prob3Title">Garder la scène</h3>
+						<p data-i18n="prob3Text">Les objets ne sont pas recréés : seuls les scripts sont détachés puis réattachés, avec les valeurs de leurs propriétés sauvegardées dans le fichier de scripts de la scène.</p>
+					</article>
+				</div>
+				<div class="engine-note" data-i18n-html="probNote">Les erreurs de compilation ne font jamais tomber l'éditeur : chaque étape renvoie un échec propre, journalisé dans la console du moteur, et le log de build complet reste disponible.</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="limits" data-toc>
+				<p class="engine-section-label" data-i18n="limLabel">Recul</p>
+				<h2 data-i18n="limTitle">Limites et suite</h2>
+				<div class="engine-card-grid engine-card-grid--2">
+					<article class="engine-next-card">
+						<h3 data-i18n="lim1Title">Un parseur volontairement simple</h3>
+						<p data-i18n="lim1Text">La lecture des headers est ligne à ligne : une propriété doit tenir sur la ligne qui suit sa macro. Un vrai parseur (ou libclang) rendrait le système plus robuste.</p>
+					</article>
+					<article class="engine-next-card">
+						<h3 data-i18n="lim2Title">Plus de types exposés</h3>
+						<p data-i18n="lim2Text">Les propriétés couvrent aujourd'hui float, int, bool, Vector3D et GameObject*. Les tableaux, les enums et les références d'assets sont les prochains types à ajouter.</p>
+					</article>
+				</div>
+			</section>
+
+			<nav class="engine-pager" aria-label="Pages du moteur" data-i18n-aria="pagerLabel">
+				<a href="./physics.html"><small data-i18n="pagerPrev">← Précédent</small><span data-i18n="navPhysics">Physique</span></a>
+				<a class="engine-pager-next" href="./audio.html"><small data-i18n="pagerNext">Suivant →</small><span data-i18n="navAudio">Audio</span></a>
+			</nav>
+		</div>
+	</main>
+	<script src="./engine-i18n.js"></script>
+	<script src="../../annexe.js"></script>
+	<script src="./engine-toc.js"></script>
+</body>
+</html>

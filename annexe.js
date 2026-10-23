@@ -2,6 +2,8 @@ const translations = {
     fr: {
         common: {
             back: "Retour au portfolio",
+            backToEngine: "Retour",
+            tocToggle: "Afficher la table des matières",
             objectiveTitle: "Objectif du projet",
             mathChallengesTitle: "Défis mathématiques",
             challengesTitle: "Défis",
@@ -80,24 +82,12 @@ const translations = {
             gammaTitle: "Le gamma (force de rotation)",
             flowTitle: "L'écoulement (ou champ de vitesse)",
             flowText:
-                "Il est modélisé à l'aide des trois éléments majeurs qui forment une tornade : la vitesse radiale (Vr), la vitesse tangente (Vt) et la vitesse verticale (Vz).<br><br>",
+                "Il est modélisé à l'aide des trois éléments majeurs qui forment une tornade : la vitesse radiale \\( V_r \\), la vitesse tangente \\( V_t \\) et la vitesse verticale \\( V_z \\).<br><br>",
             flowResult:
                 "La vitesse finale du flux d'air à une position donnée est obtenue en combinant ces trois composantes vectorielles.<br><br>",
             openingTitle: "Ouverture",
             openingText:
                 "Maintenant que la représentation visuelle de la tornade est fonctionnelle et réaliste, il reste à créer les interactions avec les objets environnants. C'est ce qui sera poursuivi dans une future itération du projet."
-        },
-        engine: {
-            pageTitle: "Détails du Projet | Moteur de jeu",
-            title: "Création d'un moteur de jeu (Vulkan)",
-            summaryText:
-                "Projet centré sur la compréhension des couches bas niveau des API graphiques modernes à travers la construction progressive d'un moteur en C++ et Vulkan.",
-            overviewText:
-                "Cette page servira à documenter l'architecture du moteur, la pipeline de rendu, la gestion des ressources et les choix techniques retenus.",
-            keyPointsText:
-                "- Développement en C++ et Vulkan<br>\n- Approche bas niveau du rendu temps réel<br>\n- Travail sur la pipeline, la caméra et l'architecture logicielle<br>\n- Base de page propre prête à être enrichie",
-            plannedAdditionsText:
-                "- Présentation de l'architecture globale<br>\n- Détail de la pipeline de rendu<br>\n- Captures ou vidéo du moteur<br>\n- Extraits de code commentés"
         },
         chromestesia: {
             pageTitle: "Détails du Projet | Chromestesia",
@@ -176,6 +166,8 @@ const translations = {
     en: {
         common: {
             back: "Back to portfolio",
+            backToEngine: "Back",
+            tocToggle: "Show table of contents",
             objectiveTitle: "Project goal",
             mathChallengesTitle: "Math challenges",
             challengesTitle: "Challenges",
@@ -254,24 +246,12 @@ const translations = {
             gammaTitle: "Gamma (rotational force)",
             flowTitle: "Flow (or velocity field)",
             flowText:
-                "It is modeled using the three major components that form a tornado: radial velocity (Vr), tangential velocity (Vt), and vertical velocity (Vz).<br><br>",
+                "It is modeled using the three major components that form a tornado: radial velocity \\( V_r \\), tangential velocity \\( V_t \\), and vertical velocity \\( V_z \\).<br><br>",
             flowResult:
                 "The final airflow velocity at a given position is obtained by combining these three vector components.<br><br>",
             openingTitle: "Next steps",
             openingText:
                 "Now that the visual representation of the tornado is functional and realistic, the next step is to create interactions with surrounding objects. That will be the focus of a future iteration of the project."
-        },
-        engine: {
-            pageTitle: "Project Details | Game Engine",
-            title: "Game Engine Creation (Vulkan)",
-            summaryText:
-                "Project focused on understanding the low-level layers of modern graphics APIs through the gradual construction of a C++ / Vulkan engine.",
-            overviewText:
-                "This page will document the engine architecture, rendering pipeline, resource management, and the technical decisions made along the way.",
-            keyPointsText:
-                "- Developed in C++ and Vulkan<br>\n- Low-level real-time rendering approach<br>\n- Work on the pipeline, camera, and software architecture<br>\n- Clean page base ready to be expanded",
-            plannedAdditionsText:
-                "- Overview of the global architecture<br>\n- Rendering pipeline details<br>\n- Engine screenshots or video<br>\n- Commented code excerpts"
         },
         chromestesia: {
             pageTitle: "Project Details | Chromestesia",
@@ -349,10 +329,27 @@ const translations = {
     }
 };
 
+// Traductions additionnelles déclarées par une page avant ce script
+// (window.extraTranslations = { en: { common: {...}, "page-id": {...} } })
+Object.entries(window.extraTranslations || {}).forEach(([lang, pages]) => {
+    translations[lang] = translations[lang] || {};
+    Object.entries(pages).forEach(([pageId, keys]) => {
+        translations[lang][pageId] = Object.assign(translations[lang][pageId] || {}, keys);
+    });
+});
+
 const langToggle = document.getElementById("lang-toggle");
 const page = document.body.dataset.page || "common";
 const langStorageKey = "siteLang";
-let currentLang = localStorage.getItem(langStorageKey) || "fr";
+const readStoredLang = () => {
+    try {
+        const stored = localStorage.getItem(langStorageKey);
+        return stored === "en" || stored === "fr" ? stored : "fr";
+    } catch (error) {
+        return "fr";
+    }
+};
+let currentLang = readStoredLang();
 
 const getTranslation = (key) => {
     const langMap = translations[currentLang] || {};
@@ -361,12 +358,29 @@ const getTranslation = (key) => {
     return pageMap[key] ?? commonMap[key];
 };
 
+// Texte d'origine (français) écrit dans le HTML, mémorisé au premier passage :
+// une clé absente du dictionnaire FR retombe sur ce texte. Les pages peuvent
+// donc ne fournir que la version anglaise (ex : html/Engine/engine-i18n.js).
+const originalTexts = new WeakMap();
+const originalTitle = document.title;
+const resolveTranslation = (el, slot, key, readOriginal) => {
+    let saved = originalTexts.get(el);
+    if (!saved) {
+        saved = {};
+        originalTexts.set(el, saved);
+    }
+    if (!(slot in saved)) {
+        saved[slot] = readOriginal();
+    }
+    return getTranslation(key) ?? (currentLang === "fr" ? saved[slot] : undefined);
+};
+
 const applyTranslations = () => {
     document.documentElement.lang = currentLang;
 
     const titleKey = document.body.dataset.titleKey;
     if (titleKey) {
-        const titleValue = getTranslation(titleKey);
+        const titleValue = getTranslation(titleKey) ?? (currentLang === "fr" ? originalTitle : undefined);
         if (titleValue) {
             document.title = titleValue;
         }
@@ -374,7 +388,7 @@ const applyTranslations = () => {
 
     document.querySelectorAll("[data-i18n]").forEach((el) => {
         const key = el.getAttribute("data-i18n");
-        const value = getTranslation(key);
+        const value = resolveTranslation(el, "text", key, () => el.textContent);
         if (value) {
             el.textContent = value;
         }
@@ -382,11 +396,30 @@ const applyTranslations = () => {
 
     document.querySelectorAll("[data-i18n-html]").forEach((el) => {
         const key = el.getAttribute("data-i18n-html");
-        const value = getTranslation(key);
+        const value = resolveTranslation(el, "html", key, () => el.innerHTML);
         if (value) {
             el.innerHTML = value;
         }
     });
+
+    document.querySelectorAll("[data-i18n-alt]").forEach((el) => {
+        const value = resolveTranslation(el, "alt", el.getAttribute("data-i18n-alt"), () => el.getAttribute("alt"));
+        if (value) {
+            el.setAttribute("alt", value);
+        }
+    });
+
+    document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+        const value = resolveTranslation(el, "aria", el.getAttribute("data-i18n-aria"), () => el.getAttribute("aria-label"));
+        if (value) {
+            el.setAttribute("aria-label", value);
+        }
+    });
+
+    // Les formules MathJax injectées via innerHTML doivent être recomposées
+    if (window.MathJax && typeof window.MathJax.typesetPromise === "function") {
+        window.MathJax.typesetPromise().catch(() => {});
+    }
 
     if (langToggle) {
         langToggle.textContent = currentLang === "fr" ? "EN" : "FR";
@@ -400,7 +433,11 @@ const applyTranslations = () => {
 if (langToggle) {
     langToggle.addEventListener("click", () => {
         currentLang = currentLang === "fr" ? "en" : "fr";
-        localStorage.setItem(langStorageKey, currentLang);
+        try {
+            localStorage.setItem(langStorageKey, currentLang);
+        } catch (error) {
+            /* stockage indisponible : la langue ne sera pas mémorisée */
+        }
         applyTranslations();
     });
 }

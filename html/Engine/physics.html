@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!-- ================================================================
+     SOUS-PAGE EnigmaEngine : Physique (travail personnel)
+     Textes : français dans le HTML, anglais dans ./engine-i18n.js
+     (clés sous "engine-physics"). Table des matières : sections [data-toc]
+     ================================================================ -->
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Architecture physique d'EnigmaEngine : intégration de Jolt, Physicalbody, collisions vers les scripts et VehicleController.">
+	<title>Physique | EnigmaEngine</title>
+	<link rel="stylesheet" href="../../css/annexe.css">
+</head>
+<body class="project-detail-page engine-page" data-page="engine-physics" data-title-key="pageTitle">
+	<nav class="detail-nav">
+		<div class="detail-nav-inner">
+			<a href="./engine.html" class="back-btn back-btn-minimal">
+				<span class="arrow">&larr;</span>
+				<span class="text" data-i18n="backToEngine">Retour</span>
+			</a>
+			<div class="detail-nav-actions">
+				<button class="lang-toggle" id="lang-toggle" type="button" aria-label="Changer la langue">EN</button>
+				<aside class="engine-toc engine-nav-toc" id="engine-toc">
+					<button class="engine-toc-handle" id="engine-toc-toggle" type="button" aria-expanded="false" aria-controls="engine-toc-nav" aria-label="Afficher la table des matières" data-i18n-aria="tocToggle">
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+					</button>
+					<div class="engine-toc-panel">
+						<p class="engine-toc-eyebrow" data-i18n="tocTitle">Sur cette page</p>
+						<nav class="engine-toc-nav" id="engine-toc-nav" aria-label="Sur cette page" data-i18n-aria="tocTitle"><ol class="engine-toc-list"></ol></nav>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</nav>
+
+	<main class="detail-container engine-layout">
+		<div class="engine-main">
+
+			<header class="engine-subhero engine-section" id="intro" data-toc>
+				<span class="engine-owner" data-i18n="ownerPersonal">Travail personnel</span>
+				<p class="engine-section-label" data-i18n="introLabel">Jolt Physics</p>
+				<h1 data-i18n="title">Physique</h1>
+				<p class="detail-lead" data-i18n="lead">Mon objectif n'était pas seulement d'intégrer Jolt, mais de construire une couche moteur qui relie scène, éditeur, gameplay et simulation de manière cohérente, jusqu'à une voiture pilotable.</p>
+				<ul class="engine-tags">
+					<li>Jolt Physics</li>
+					<li>Physicalbody</li>
+					<li>Compound shapes</li>
+					<li>VehicleController</li>
+					<li>Job system</li>
+				</ul>
+			</header>
+
+			<section class="engine-panel engine-block engine-section" id="physicalbody" data-toc>
+				<p class="engine-section-label" data-i18n="pbLabel">Le socle</p>
+				<h2 data-i18n="pbTitle">Physicalbody, le manager physique de l'objet</h2>
+				<p data-i18n-html="pbText1">Dans EnigmaEngine, un objet ne parle jamais directement à Jolt. J'ai introduit une couche centrale, <code>Physicalbody</code>, qui agit comme le manager physique local d'un <code>GameObject</code>. Elle centralise les colliders, le body Jolt actif, le type de mouvement, la synchronisation des transforms et les remontées de collision vers le gameplay.</p>
+				<figure class="engine-figure engine-physics-figure">
+					<img src="img/physicalbody-schema.png" alt="Schéma du fonctionnement du Physicalbody dans EnigmaEngine" data-i18n-alt="pbFigAlt" class="rendered-img" loading="lazy" decoding="async">
+				</figure>
+				<p data-i18n-html="pbText2">Cette classe ne remplace pas les autres composants, elle les coordonne. Le <code>Collider</code> décrit une forme, le <code>Body</code> porte la référence Jolt et son <code>BodyID</code>, et le <code>Physicalbody</code> relie les deux pour produire une seule représentation physique par objet.</p>
+				<div class="engine-card-grid">
+					<article class="engine-module-card">
+						<h3 data-i18n="pbCard1Title">Forme</h3>
+						<p data-i18n-html="pbCard1Text">Le <code>Collider</code> construit sa shape Jolt et garde ses offsets locaux.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="pbCard2Title">Corps</h3>
+						<p data-i18n-html="pbCard2Text">Le <code>Body</code> crée et détruit le corps dans le <code>PhysicsSystem</code> à partir de la shape finale.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="pbCard3Title">Coordination</h3>
+						<p data-i18n-html="pbCard3Text">Le <code>Physicalbody</code> reconstruit, met à jour et redistribue l'état physique autour de l'objet.</p>
+					</article>
+				</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="colliders" data-toc>
+				<p class="engine-section-label" data-i18n="colLabel">Formes</p>
+				<h2 data-i18n="colTitle">Plusieurs colliders, un seul body</h2>
+				<div class="engine-split">
+					<div>
+						<p data-i18n-html="colText1">Tous les colliders dérivent d'une base commune qui gère le parent, la position et la rotation locales et la shape Jolt. Chaque type construit ensuite sa propre forme : <code>BoxCollider</code>, <code>SphereCollider</code>, <code>MeshCollider</code> et <code>ConvexCollider</code>.</p>
+						<p data-i18n-html="colText2">Quand un objet porte plusieurs colliders, je ne crée pas plusieurs petits corps indépendants. Le <code>Physicalbody</code> les regroupe dans une <strong>shape composée</strong>, puis crée ou reconstruit le body à partir de ce volume unique. Dès qu'un collider change de taille ou de position, la reconstruction est relancée automatiquement.</p>
+					</div>
+					<figure class="engine-figure engine-shot">
+						<img src="img/physics-collider-screen4.png" alt="Colliders visibles dans l'éditeur d'EnigmaEngine" data-i18n-alt="colFigAlt" class="rendered-img" loading="lazy" decoding="async">
+					</figure>
+				</div>
+				<div class="engine-note" data-i18n-html="colNote">Chaque body porte dans son <code>userData</code> un pointeur vers son <code>Physicalbody</code>. C'est ce lien qui permet ensuite de remonter d'un contact Jolt jusqu'à l'objet du moteur et à ses scripts.</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="rigidbody" data-toc>
+				<p class="engine-section-label" data-i18n="rbLabel">Façade composant</p>
+				<h2 data-i18n="rbTitle">Rigidbody : exposer sans dupliquer</h2>
+				<p data-i18n-html="rbText1">Le <code>Rigidbody</code> est le composant que l'on ajoute dans l'éditeur. Il expose ce qu'on attend d'un objet dynamique (masse, gravité, motion type statique / kinematic / dynamique, mode trigger, vitesses et forces), mais toutes ces opérations sont exécutées par le <code>Physicalbody</code>. Le <code>Rigidbody</code> expose, le <code>Physicalbody</code> exécute : la logique physique n'existe qu'à un seul endroit.</p>
+				<p data-i18n-html="rbText2">Un cas limite est géré au passage : un objet qui reçoit un <code>Rigidbody</code> sans aucun collider reçoit un <code>EmptyCollider</code>, pour qu'il existe toujours un support physique minimal.</p>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="synchronisation" data-toc>
+				<p class="engine-section-label" data-i18n="syncLabel">Scène ↔ simulation</p>
+				<h2 data-i18n="syncTitle">Garder deux mondes synchronisés</h2>
+				<p data-i18n="syncText1">La physique tourne en pas fixe, le rendu à la fréquence de l'écran. Il faut donc synchroniser dans les deux sens.</p>
+				<ol class="engine-flow">
+					<li data-i18n-html="syncStep1"><strong>Scène → physique</strong>Un transform ou un collider modifié met à jour la pose ou la shape dans Jolt.</li>
+					<li data-i18n-html="syncStep2"><strong>Pas fixe</strong><code>PhysicsSystem::Update</code> simule, parallélisé par le job system de Jolt.</li>
+					<li data-i18n-html="syncStep3"><strong>Physique → scène</strong>Position et rotation calculées sont stockées dans le <code>Physicalbody</code>.</li>
+					<li data-i18n-html="syncStep4"><strong>Interpolation</strong>Le transform affiché est interpolé entre les deux derniers pas physiques.</li>
+				</ol>
+<pre><code>// Physicalbody::UpdateParentTransform(alpha)
+gameObject-&gt;transform.SetPosition(Math::Vector3D::Lerp(previousPositionAfterPhysics, positionAfterPhysics, alpha));
+gameObject-&gt;transform.SetRotation(Math::Quaternion::Slerp(previousRotationAfterPhysics, rotationAfterPhysics, alpha));</code></pre>
+				<div class="engine-note" data-i18n-html="syncNote">Cas concret : en mode play, déplacer un objet physique avec les gizmos ne peut pas se limiter à bouger son <code>Transform</code> visuel. Sinon la scène affiche une position pendant que Jolt en simule une autre. <code>UpdatePhysicsTransform</code> renvoie donc la modification vers le body.</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="collisions" data-toc>
+				<p class="engine-section-label" data-i18n="collLabel">Vers le gameplay</p>
+				<h2 data-i18n="collTitle">Des contacts Jolt aux scripts</h2>
+				<p data-i18n-html="collText1">Les callbacks de Jolt sont appelés pendant la simulation, potentiellement depuis plusieurs threads. Je n'y appelle donc jamais de code gameplay : le <code>ContactListener</code> se contente d'empiler les paires de bodies, et la distribution se fait après le pas physique, sur le thread principal.</p>
+				<ol class="engine-flow">
+					<li data-i18n-html="collStep1"><strong>Détection</strong>Jolt signale le contact au <code>ContactListener</code>.</li>
+					<li data-i18n-html="collStep2"><strong>File d'attente</strong>La paire est rangée dans <code>contactsAdded</code>, <code>Persisted</code> ou <code>Removed</code>.</li>
+					<li data-i18n-html="collStep3"><strong>Résolution</strong><code>UpdateCallBacks()</code> retrouve les deux <code>Physicalbody</code> via le <code>userData</code>.</li>
+					<li data-i18n-html="collStep4"><strong>Dispatch</strong>Les scripts inscrits reçoivent <code>OnCollisionEnter</code>, <code>Stay</code> ou <code>Exit</code>.</li>
+				</ol>
+<pre><code>for (Scripting::IScript* script : pb-&gt;collisionManager-&gt;*scriptList)
+    (script-&gt;*callback)(*pb, *pb2);
+for (Scripting::IScript* script : pb2-&gt;collisionManager-&gt;*scriptList)
+    (script-&gt;*callback)(*pb2, *pb);</code></pre>
+				<p data-i18n-html="collText2">Une même fonction traite les trois listes grâce à des pointeurs sur membres. C'est aussi un choix d'API assumé : contrairement à Unity, je n'ai pas séparé <code>OnCollision</code> et <code>OnTrigger</code>. Un body devient capteur avec <code>SetTrigger</code>, et l'interface côté script reste plus compacte.</p>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="vehicle" data-toc>
+				<p class="engine-section-label" data-i18n="vehLabel">La brique la plus visible</p>
+				<h2 data-i18n="vehTitle">VehicleController</h2>
+				<p data-i18n-html="vehText1">Le <code>VehicleController</code> construit une voiture complète au-dessus des briques véhicule de Jolt, et pas un simple rigidbody poussé par des forces. Il assemble le body, les quatre roues, les suspensions, les barres anti-roulis, le différentiel, le moteur, la boîte de vitesses et la contrainte véhicule. Les scripts n'ont plus qu'à envoyer les entrées du joueur et lire le régime, la vitesse ou le rapport engagé.</p>
+				<div class="engine-table-wrap">
+					<table class="engine-table">
+						<thead>
+							<tr>
+								<th data-i18n="vehColGroup">Groupe</th>
+								<th data-i18n="vehColParams">Réglages exposés dans l'éditeur</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr><td data-i18n="vehRowGeneral">Général</td><td data-i18n="vehRowGeneralText">masse, angle de roulis max, transmission FWD / RWD / AWD, boîte auto ou manuelle</td></tr>
+							<tr><td data-i18n="vehRowSusp">Suspensions</td><td data-i18n="vehRowSuspText">raideur avant / arrière, fréquence, amortissement</td></tr>
+							<tr><td data-i18n="vehRowEngine">Moteur</td><td data-i18n="vehRowEngineText">couple max, régime min / max, inertie, amortissement angulaire</td></tr>
+							<tr><td data-i18n="vehRowWheels">Roues</td><td data-i18n="vehRowWheelsText">rayon, largeur, empattement, voie, angle de braquage, couple de freinage</td></tr>
+						</tbody>
+					</table>
+				</div>
+				<p data-i18n-html="vehText2">La difficulté : une grande partie de ces réglages ne peut pas être modifiée sur un véhicule Jolt déjà construit. Chaque setter relance donc une reconstruction propre de la voiture (<code>DeleteCar()</code> puis <code>CreateCar()</code>), ce qui permet de régler la conduite en direct depuis l'inspecteur, en mode play. Les roues sont dessinées en gizmos pour vérifier leur placement.</p>
+<pre><code>// Scripting API
+void SetDriverInput(float inForward, float inRight, float inBrake, float inHandBrake) const;
+float GetRPM() const;
+float GetSpeed() const;   // km/h
+int   GetCurrentGear();</code></pre>
+				<div class="engine-note" data-i18n-html="vehNote">Le régime renvoyé par <code>GetRPM()</code> alimente directement le son moteur : voir la page <a href="./audio.html">Audio</a>.</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="limits" data-toc>
+				<p class="engine-section-label" data-i18n="limLabel">Recul</p>
+				<h2 data-i18n="limTitle">Limites et suite</h2>
+				<div class="engine-card-grid engine-card-grid--2">
+					<article class="engine-next-card">
+						<h3 data-i18n="lim1Title">Layers de collision</h3>
+						<p data-i18n="lim1Text">Le filtrage repose sur deux couches fixes (statique / mobile). C'est suffisant pour la démo, mais la prochaine étape est un système de layers configurable à l'exécution, comme dans Unity.</p>
+					</article>
+					<article class="engine-next-card">
+						<h3 data-i18n="lim2Title">Requêtes physiques</h3>
+						<p data-i18n="lim2Text">Les scripts n'ont pas encore accès aux raycasts et overlaps de Jolt. Les exposer ouvrirait la voie à l'IA des adversaires et à des déclencheurs plus fins.</p>
+					</article>
+				</div>
+			</section>
+
+			<nav class="engine-pager" aria-label="Pages du moteur" data-i18n-aria="pagerLabel">
+				<a href="./engine.html"><small data-i18n="pagerPrev">← Précédent</small><span data-i18n="navHome">Accueil du moteur</span></a>
+				<a class="engine-pager-next" href="./scripting.html"><small data-i18n="pagerNext">Suivant →</small><span data-i18n="navScripting">Scripting &amp; Hot Reload</span></a>
+			</nav>
+		</div>
+	</main>
+	<script src="./engine-i18n.js"></script>
+	<script src="../../annexe.js"></script>
+	<script src="./engine-toc.js"></script>
+</body>
+</html>

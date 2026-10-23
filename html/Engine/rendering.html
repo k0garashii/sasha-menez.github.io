@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!-- ================================================================
+     SOUS-PAGE EnigmaEngine : Rendu (travail d'équipe)
+     Textes : français dans le HTML, anglais dans ./engine-i18n.js
+     (clés sous "engine-rendering"). Table des matières : sections [data-toc]
+     ================================================================ -->
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Pipeline de rendu d'EnigmaEngine : RHI maison sur OpenGL, deferred PBR, IBL, ombres en cascades, SSAO, bloom et FXAA.">
+	<title>Rendu | EnigmaEngine</title>
+	<link rel="stylesheet" href="../../css/annexe.css">
+</head>
+<body class="project-detail-page engine-page" data-page="engine-rendering" data-title-key="pageTitle">
+	<nav class="detail-nav">
+		<div class="detail-nav-inner">
+			<a href="./engine.html" class="back-btn back-btn-minimal">
+				<span class="arrow">&larr;</span>
+				<span class="text" data-i18n="backToEngine">Retour</span>
+			</a>
+			<div class="detail-nav-actions">
+				<button class="lang-toggle" id="lang-toggle" type="button" aria-label="Changer la langue">EN</button>
+				<aside class="engine-toc engine-nav-toc" id="engine-toc">
+					<button class="engine-toc-handle" id="engine-toc-toggle" type="button" aria-expanded="false" aria-controls="engine-toc-nav" aria-label="Afficher la table des matières" data-i18n-aria="tocToggle">
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+					</button>
+					<div class="engine-toc-panel">
+						<p class="engine-toc-eyebrow" data-i18n="tocTitle">Sur cette page</p>
+						<nav class="engine-toc-nav" id="engine-toc-nav" aria-label="Sur cette page" data-i18n-aria="tocTitle"><ol class="engine-toc-list"></ol></nav>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</nav>
+
+	<main class="detail-container engine-layout">
+		<div class="engine-main">
+
+			<header class="engine-subhero engine-section" id="intro" data-toc>
+				<span class="engine-owner engine-owner--team" data-i18n="ownerTeam">Travail d'équipe</span>
+				<p class="engine-section-label" data-i18n="introLabel">OpenGL 4.6</p>
+				<h1 data-i18n="title">Rendu</h1>
+				<p class="detail-lead" data-i18n="lead">Le rendu est une brique commune du projet. Il repose sur une couche d'abstraction maison (RHI) et sur un pipeline différé physiquement réaliste, pensé pour afficher des voitures et un circuit de manière crédible.</p>
+				<ul class="engine-tags">
+					<li>RHI</li>
+					<li>Deferred</li>
+					<li>PBR</li>
+					<li>IBL</li>
+					<li>CSM</li>
+					<li>SSAO</li>
+					<li>Bloom</li>
+					<li>FXAA</li>
+				</ul>
+			</header>
+
+			<section class="engine-panel engine-block engine-section" id="rhi" data-toc>
+				<p class="engine-section-label" data-i18n="rhiLabel">Abstraction</p>
+				<h2 data-i18n="rhiTitle">Un RHI maison</h2>
+				<p data-i18n-html="rhiText1">Le moteur ne fait jamais d'appel OpenGL en dehors du RHI (<em>Render Hardware Interface</em>). Le renderer manipule des interfaces inspirées de Vulkan (<code>IDevice</code>, <code>ICommandBuffer</code>, <code>IPipeline</code>, <code>IDescriptor</code>, <code>IFramebuffer</code>, <code>ISwapChain</code>...) et le module <code>gl_core</code> en fournit l'implémentation OpenGL.</p>
+				<p data-i18n="rhiText2">Chaque passe est décrite comme un pipeline : shaders, format des sommets, mode de culling, profondeur et blending sont déclarés une fois, à la création, plutôt que modifiés à la volée pendant le rendu.</p>
+				<div class="engine-note" data-i18n="rhiNote">Aujourd'hui, OpenGL est le seul backend. L'abstraction est en place pour en accueillir un second (Vulkan), mais ce travail reste à faire.</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="frame" data-toc>
+				<p class="engine-section-label" data-i18n="frameLabel">Une frame</p>
+				<h2 data-i18n="frameTitle">Le pipeline, passe par passe</h2>
+				<ol class="engine-flow">
+					<li data-i18n-html="frameStep1"><strong>Ombres</strong>Shadow maps des lumières directionnelle, spot et point.</li>
+					<li data-i18n-html="frameStep2"><strong>G-Buffer</strong>Position, normale, albedo + AO, metal / roughness, clear coat, émissif.</li>
+					<li data-i18n-html="frameStep3"><strong>SSAO</strong>Occlusion ambiante en espace écran (64 échantillons), puis flou.</li>
+					<li data-i18n-html="frameStep4"><strong>Éclairage différé</strong>PBR, IBL et ombres sur un quad plein écran.</li>
+					<li data-i18n-html="frameStep5"><strong>Transparence</strong>Objets transparents en forward, faces arrière puis faces avant.</li>
+					<li data-i18n-html="frameStep6"><strong>Bloom</strong>Chaîne de downsample / upsample sur les zones lumineuses.</li>
+					<li data-i18n-html="frameStep7"><strong>UI</strong>Widgets, boutons et texte 2D / 3D rendus avec FreeType.</li>
+					<li data-i18n-html="frameStep8"><strong>FXAA</strong>Anticrénelage final avant présentation.</li>
+				</ol>
+				<p data-i18n-html="frameText1">Le même renderer sert deux contextes : une instance « éditeur » (grille, gizmos, sélection) et une instance « jeu », celle de la caméra de jeu, affichée dans l'onglet <em>Game</em> ou plein écran dans l'exécutable final.</p>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="lighting" data-toc>
+				<p class="engine-section-label" data-i18n="lightLabel">Matériaux et lumière</p>
+				<h2 data-i18n="lightTitle">PBR et éclairage par l'environnement</h2>
+				<div class="engine-split">
+					<div>
+						<p data-i18n-html="lightText1">Les matériaux suivent le modèle metal / roughness, avec une couche de <em>clear coat</em> qui compte beaucoup pour le vernis d'une carrosserie. L'éclairage combine lumières directionnelle, spots (jusqu'à 10) et points (jusqu'à 6).</p>
+						<p data-i18n-html="lightText2">L'éclairage ambiant vient d'une image HDR : elle est projetée sur un cubemap, d'où l'on précalcule une carte d'irradiance (diffus) et une carte préfiltrée par niveau de rugosité (spéculaire), combinées à une table BRDF.</p>
+					</div>
+					<figure class="engine-figure engine-shot">
+						<img src="img/hero-screen2.png" alt="Rendu d'une voiture dans EnigmaEngine" data-i18n-alt="lightFigAlt" class="rendered-img" loading="lazy" decoding="async">
+					</figure>
+				</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="shadows" data-toc>
+				<p class="engine-section-label" data-i18n="shadowLabel">Ombres</p>
+				<h2 data-i18n="shadowTitle">Trois types d'ombres</h2>
+				<div class="engine-card-grid">
+					<article class="engine-module-card">
+						<h3 data-i18n="shadow1Title">Directionnelle</h3>
+						<p data-i18n="shadow1Text">Shadow maps en cascades (CSM) stockées dans un texture array, rendues en une passe grâce à un geometry shader. La résolution reste bonne près de la caméra comme au loin.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="shadow2Title">Spot</h3>
+						<p data-i18n="shadow2Text">Une shadow map en perspective par spot, échantillonnée dans la passe d'éclairage.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="shadow3Title">Point</h3>
+						<p data-i18n="shadow3Text">Cubemaps de profondeur rendues en une passe avec un geometry shader qui duplique la géométrie sur les six faces.</p>
+					</article>
+				</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="limits" data-toc>
+				<p class="engine-section-label" data-i18n="limLabel">Recul</p>
+				<h2 data-i18n="limTitle">Limites et suite</h2>
+				<div class="engine-card-grid engine-card-grid--2">
+					<article class="engine-next-card">
+						<h3 data-i18n="lim1Title">Un deuxième backend</h3>
+						<p data-i18n="lim1Text">Le RHI a été pensé pour Vulkan. L'implémenter validerait vraiment l'abstraction, qui n'a pour l'instant été éprouvée que sur OpenGL.</p>
+					</article>
+					<article class="engine-next-card">
+						<h3 data-i18n="lim2Title">Moins de draw calls</h3>
+						<p data-i18n="lim2Text">Les objets hors champ sont déjà écartés par un test frustum / AABB, et les AABB ne sont recalculées que si le transform change. La suite : instancing et tri des draw calls par matériau.</p>
+					</article>
+				</div>
+			</section>
+
+			<nav class="engine-pager" aria-label="Pages du moteur" data-i18n-aria="pagerLabel">
+				<a href="./audio.html"><small data-i18n="pagerPrev">← Précédent</small><span data-i18n="navAudio">Audio</span></a>
+				<a class="engine-pager-next" href="./serialisation.html"><small data-i18n="pagerNext">Suivant →</small><span data-i18n="navSerialisation">Réflexion &amp; Sérialisation</span></a>
+			</nav>
+		</div>
+	</main>
+	<script src="./engine-i18n.js"></script>
+	<script src="../../annexe.js"></script>
+	<script src="./engine-toc.js"></script>
+</body>
+</html>

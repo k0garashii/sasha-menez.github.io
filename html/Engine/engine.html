@@ -1,340 +1,127 @@
 <!DOCTYPE html>
 <html lang="fr">
 <!-- ================================================================
-     PAGE : Accueil du projet EnigmaEngine
-     Rôle : page "hub" qui présente le projet en un coup d'œil (hero,
-     titre, vidéo à venir) puis renvoie vers des sous-pages dédiées
-     (rendering.html, physics.html, scripting.html, audio.html,
-     contributions.html, team.html, gallery.html).
-
-     Repères rapides dans ce fichier :
-       1. <head>                 → métadonnées + lien vers annexe.css
-       2. <nav class="detail-nav"> → barre du haut (retour + langue + TOC burger)
-       3. <section id="overview">  → grand hero (titre, image, vidéo placeholder)
-       4. <section class="engine-pages"> → grille de liens vers les sous-pages
-       5. Blocs en fin de fichier → anciennes sections
-          (rendu, physique, scripting, audio, contributions, équipe,
-          galerie) désactivées car déplacées dans des pages séparées.
-          Elles sont conservées en commentaire, probablement comme
-          brouillon/réserve de contenu à réutiliser plus tard.
-       6. <script> en bas       → logique JS : ouverture/fermeture du
-          menu burger (TOC) + surlignage du lien actif au scroll.
+     PAGE : accueil du projet EnigmaEngine (hub)
+     1. <nav class="detail-nav">       retour + langue + table des matières
+     2. <section id="overview">        titre, infos clés, capture principale
+     3. <section id="today">           ce que le moteur fait déjà
+     4. <section id="project-pages">   cartes vers les sous-pages
+     Textes : français dans le HTML, anglais dans ./engine-i18n.js
+     Table des matières : générée par ./engine-toc.js depuis les [data-toc]
      ================================================================ -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Presentation d'EnigmaEngine, un moteur 3D en C++ avec editeur, rendu temps reel, physique et hot reload.">
-    <title>Enigma Engine</title>
-    <!-- Feuille de style commune à toutes les pages "détail projet" -->
+    <meta name="description" content="Présentation d'EnigmaEngine, un moteur 3D en C++ avec éditeur, rendu temps réel, physique véhicule et hot reload.">
+    <title>Détails du Projet | EnigmaEngine</title>
     <link rel="stylesheet" href="../../css/annexe.css">
 </head>
-<!-- data-page/class "engine-page" active tout le thème spécifique
-     décrit dans la section 9 de annexe.css -->
-<body class="project-detail-page engine-page">
+<body class="project-detail-page engine-page" data-page="engine" data-title-key="pageTitle">
 
-    <!-- ============================================================
-         NAV DU HAUT (sticky) : lien retour + bouton langue + burger TOC
-         ============================================================ -->
     <nav class="detail-nav">
         <div class="detail-nav-inner">
-            <!-- Retour vers la page principale du portfolio -->
             <a href="/index.html" class="back-btn back-btn-minimal">
                 <span class="arrow">&larr;</span>
                 <span class="text" data-i18n="back">Retour au portfolio</span>
             </a>
             <div class="detail-nav-actions">
-                <!-- Bouton de bascule de langue (texte "EN" géré/actualisé
-                     côté JS, probablement dans annexe.js) -->
                 <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Changer la langue">EN</button>
-
-                <!-- Bouton "burger" (3 barres) + panneau flottant listant
-                     les sections de la page (table des matières).
-                     Ouverture au survol (CSS :hover) ET au clic (JS plus bas,
-                     utile sur mobile où il n'y a pas de survol). -->
-                <aside class="engine-toc engine-nav-toc" id="engine-toc" aria-label="Table des matieres">
-            <button class="engine-toc-handle" id="engine-toc-toggle" type="button" aria-expanded="false" aria-controls="engine-toc-nav" aria-label="Afficher la table des matieres">
-                <span class="engine-toc-handle-bar" aria-hidden="true"></span>
-                <span class="engine-toc-handle-bar" aria-hidden="true"></span>
-                <span class="engine-toc-handle-bar" aria-hidden="true"></span>
-            </button>
-
-            <!-- Burger menu -->
-            <div class="engine-toc-panel">
-                <p class="engine-toc-eyebrow">Sur cette page</p>
-                <nav class="engine-toc-nav" id="engine-toc-nav" aria-label="Table des matieres">
-                    <!-- NOTE : ces liens (#overview, #rendering, #physics...)
-                         pointent vers des ancres qui n'existent plus toutes
-                         sur CETTE page depuis que le contenu a été déplacé
-                         vers des sous-pages séparées (voir engine-pages
-                         plus bas). Seule l'ancre #overview existe encore ici.
-                         À vérifier/mettre à jour si tu gardes ce menu tel quel. -->
-                    <ol class="engine-toc-list">
-                    <li>
-                        <a class="engine-toc-link" href="#overview">
-                            <span class="engine-toc-number">01</span>
-                            <span class="engine-toc-copy">
-                                <strong>Introduction</strong>
-                                <small>contexte, visuels et acces rapides</small>
-                            </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="engine-toc-link" href="#rendering">
-                            <span class="engine-toc-number">02</span>
-                            <span class="engine-toc-copy">
-                                <strong>Rendu</strong>
-                                <small>pipeline et outillage</small>
-                            </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="engine-toc-link" href="#physics">
-                            <span class="engine-toc-number">03</span>
-                            <span class="engine-toc-copy">
-                                <strong>Physique</strong>
-                                <small>physicalbody et gameplay</small>
-                            </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="engine-toc-link" href="#scripting">
-                            <span class="engine-toc-number">04</span>
-                            <span class="engine-toc-copy">
-                                <strong>Scripting</strong>
-                                <small>hot reload et reflection</small>
-                            </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="engine-toc-link" href="#sound">
-                            <span class="engine-toc-number">05</span>
-                            <span class="engine-toc-copy">
-                                <strong>Audio</strong>
-                                <small>spatialisation et moteur</small>
-                            </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="engine-toc-link" href="#contributions">
-                            <span class="engine-toc-number">06</span>
-                            <span class="engine-toc-copy">
-                                <strong>Contributions</strong>
-                                <small>part individuelle</small>
-                            </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="engine-toc-link" href="#team">
-                            <span class="engine-toc-number">07</span>
-                            <span class="engine-toc-copy">
-                                <strong>Equipe</strong>
-                                <small>part collective</small>
-                            </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="engine-toc-link" href="#gallery">
-                            <span class="engine-toc-number">08</span>
-                            <span class="engine-toc-copy">
-                                <strong>Galerie</strong>
-                                <small>preuves visuelles</small>
-                            </span>
-                        </a>
-                    </li>
-                    </ol>
-                </nav>
-            </div>
+                <aside class="engine-toc engine-nav-toc" id="engine-toc">
+                    <button class="engine-toc-handle" id="engine-toc-toggle" type="button" aria-expanded="false" aria-controls="engine-toc-nav" aria-label="Afficher la table des matières" data-i18n-aria="tocToggle">
+                        <span class="engine-toc-handle-bar" aria-hidden="true"></span>
+                        <span class="engine-toc-handle-bar" aria-hidden="true"></span>
+                        <span class="engine-toc-handle-bar" aria-hidden="true"></span>
+                    </button>
+                    <div class="engine-toc-panel">
+                        <p class="engine-toc-eyebrow" data-i18n="tocTitle">Sur cette page</p>
+                        <nav class="engine-toc-nav" id="engine-toc-nav" aria-label="Sur cette page" data-i18n-aria="tocTitle">
+                            <ol class="engine-toc-list"></ol>
+                        </nav>
+                    </div>
                 </aside>
             </div>
         </div>
     </nav>
 
     <main class="detail-container engine-layout">
-
         <div class="engine-main">
 
-            <!-- ========================================================
-                 HERO / INTRODUCTION (#overview)
-                 Titre du projet, sous-titre descriptif, grande image
-                 illustrative, puis carte "vidéo à venir" (placeholder
-                 en attendant une vraie capture du gameplay final).
-                 ======================================================== -->
-            <section class="engine-hero engine-section" id="overview">
+            <section class="engine-hero engine-section" id="overview" data-toc>
                 <div class="engine-hero-copy">
+                    <p class="engine-section-label" data-i18n="heroLabel">Moteur 3D · C++20</p>
                     <h1>EnigmaEngine</h1>
-                    <p class="engine-hero-subtitle">A custom C++ game engine built to power a playable vertical slice, with rendering, physics, audio, scripting and networking foundations.</p>
+                    <p class="engine-hero-subtitle" data-i18n="heroSubtitle">Un moteur de jeu C++ sur mesure, conçu pour porter un jeu de course jouable, avec son éditeur, son rendu, sa physique, son audio et son scripting.</p>
                 </div>
 
                 <div class="engine-hero-visuals">
-                    <!-- Grande image "héros" du projet -->
                     <figure class="engine-hero-media">
-                        <img src="drive-screen6.png" alt="Capture du resultat en jeu dans EnigmaEngine" class="rendered-img" decoding="async">
+                        <img src="img/drive-screen6.png" alt="Capture du résultat en jeu dans EnigmaEngine" data-i18n-alt="heroAlt" class="rendered-img" decoding="async">
                     </figure>
-
-                    <!-- Emplacement réservé pour la future vidéo du jeu :
-                         pour l'instant juste une image de fond assombrie
-                         + une icône "Play" en overlay (pas de vraie vidéo/lecteur) -->
-                    <div class="engine-hero-video-card">
-                        <p class="engine-section-label">Video du jeu final</p>
-                        <div class="engine-video-placeholder" role="img" aria-label="Placeholder pour la future video du jeu final">
-                            <img src="menu-screen5.png" alt="" class="engine-video-placeholder-image" decoding="async">
-                            <div class="engine-video-placeholder-overlay">
-                                <span class="engine-video-placeholder-icon" aria-hidden="true">Play</span>
-                                <strong>Video a ajouter</strong>
-                                <p>Je remplacerai cette zone par une nouvelle capture du jeu final.</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- ----------------------------------------------------
-                     BLOC DÉSACTIVÉ : bandeau de liens rapides défilant
-                     ("marquee") vers chaque section, avec image + titre
-                     pour chacune (rendu, physique, scripting, audio,
-                     contributions, galerie). Les cartes sont dupliquées
-                     à la fin (avec aria-hidden + tabindex="-1") pour que
-                     l'animation de défilement boucle sans coupure visible.
-                     Remplacé depuis par la grille "engine-page-links"
-                     juste en dessous. À réactiver si tu préfères ce
-                     format carrousel au format grille actuel.
-                     ---------------------------------------------------- -->
-                <!-- <div class="engine-hero-links-shell">
-                    <p class="engine-section-label">Acces rapide</p>
-                    <div class="engine-hero-links-marquee">
-                        <nav class="engine-hero-links-track" aria-label="Acces rapides vers les sections de la page">
-                            <a class="engine-hero-link-card" href="#rendering">
-                                <img src="editor-material-screen3.png" alt="Placeholder representatif de la section rendu" class="engine-hero-link-image" loading="lazy" decoding="async">
-                                <span class="engine-hero-link-copy">
-                                    <strong>Rendu</strong>
-                                    <small>Pipeline et outils visuels</small>
-                                </span>
-                            </a>
-                            <a class="engine-hero-link-card" href="#physics">
-                                <img src="physics-collider-screen4.png" alt="Placeholder representatif de la section physique" class="engine-hero-link-image" loading="lazy" decoding="async">
-                                <span class="engine-hero-link-copy">
-                                    <strong>Physique</strong>
-                                    <small>Physicalbody et gameplay</small>
-                                </span>
-                            </a>
-                            <a class="engine-hero-link-card" href="#scripting">
-                                <img src="hero-screen2.png" alt="Placeholder representatif de la section scripting" class="engine-hero-link-image" loading="lazy" decoding="async">
-                                <span class="engine-hero-link-copy">
-                                    <strong>Scripting</strong>
-                                    <small>Hot reload et runtime</small>
-                                </span>
-                            </a>
-                            <a class="engine-hero-link-card" href="#sound">
-                                <img src="menu-screen5.png" alt="Placeholder representatif de la section audio" class="engine-hero-link-image" loading="lazy" decoding="async">
-                                <span class="engine-hero-link-copy">
-                                    <strong>Audio</strong>
-                                    <small>Spatialisation et moteur</small>
-                                </span>
-                            </a>
-                            <a class="engine-hero-link-card" href="#contributions">
-                                <img src="engineLogo.png" alt="Placeholder representatif de la section contributions" class="engine-hero-link-image" loading="lazy" decoding="async">
-                                <span class="engine-hero-link-copy">
-                                    <strong>Contributions</strong>
-                                    <small>Travail personnel</small>
-                                </span>
-                            </a>
-                            <a class="engine-hero-link-card" href="#gallery">
-                                <img src="drive-screen6.png" alt="Placeholder representatif de la section galerie" class="engine-hero-link-image" loading="lazy" decoding="async">
-                                <span class="engine-hero-link-copy">
-                                    <strong>Galerie</strong>
-                                    <small>Captures et preuves</small>
-                                </span>
-                            </a>
-                            <a class="engine-hero-link-card" href="#rendering" aria-hidden="true" tabindex="-1">
-                                <img src="editor-material-screen3.png" alt="" class="engine-hero-link-image" loading="lazy" decoding="async">
-                                <span class="engine-hero-link-copy">
-                                    <strong>Rendu</strong>
-                                    <small>Pipeline et outils visuels</small>
-                                </span>
-                            </a>
-                            <a class="engine-hero-link-card" href="#physics" aria-hidden="true" tabindex="-1">
-                                <img src="physics-collider-screen4.png" alt="" class="engine-hero-link-image" loading="lazy" decoding="async">
-                                <span class="engine-hero-link-copy">
-                                    <strong>Physique</strong>
-                                    <small>Physicalbody et gameplay</small>
-                                </span>
-                            </a>
-                            <a class="engine-hero-link-card" href="#scripting" aria-hidden="true" tabindex="-1">
-                                <img src="hero-screen2.png" alt="" class="engine-hero-link-image" loading="lazy" decoding="async">
-                                <span class="engine-hero-link-copy">
-                                    <strong>Scripting</strong>
-                                    <small>Hot reload et runtime</small>
-                                </span>
-                            </a>
-                            <a class="engine-hero-link-card" href="#sound" aria-hidden="true" tabindex="-1">
-                                <img src="menu-screen5.png" alt="" class="engine-hero-link-image" loading="lazy" decoding="async">
-                                <span class="engine-hero-link-copy">
-                                    <strong>Audio</strong>
-                                    <small>Spatialisation et moteur</small>
-                                </span>
-                            </a>
-                            <a class="engine-hero-link-card" href="#contributions" aria-hidden="true" tabindex="-1">
-                                <img src="engineLogo.png" alt="" class="engine-hero-link-image" loading="lazy" decoding="async">
-                                <span class="engine-hero-link-copy">
-                                    <strong>Contributions</strong>
-                                    <small>Travail personnel</small>
-                                </span>
-                            </a>
-                            <a class="engine-hero-link-card" href="#gallery" aria-hidden="true" tabindex="-1">
-                                <img src="drive-screen6.png" alt="" class="engine-hero-link-image" loading="lazy" decoding="async">
-                                <span class="engine-hero-link-copy">
-                                    <strong>Galerie</strong>
-                                    <small>Captures et preuves</small>
-                                </span>
-                            </a>
-                        </nav>
+                <div class="engine-meta-grid">
+                    <div class="engine-meta-card">
+                        <h2 data-i18n="metaContextTitle">Cadre</h2>
+                        <p data-i18n="metaContextText">Projet de cours en équipe de 3, du 10 mars au 20 mai 2026, que je continue de faire évoluer depuis.</p>
                     </div>
-                </div> -->
+                    <div class="engine-meta-card">
+                        <h2 data-i18n="metaGoalTitle">Objectif</h2>
+                        <p data-i18n="metaGoalText">Construire un moteur capable de servir de base à un jeu de voiture, puis le prouver avec une démo de course jouable.</p>
+                    </div>
+                    <div class="engine-meta-card">
+                        <h2 data-i18n="metaStackTitle">Stack</h2>
+                        <p data-i18n="metaStackText">C++20, CMake, RHI maison sur OpenGL, Jolt Physics, ImGui, RTTR, miniaudio, Assimp, ENet.</p>
+                    </div>
+                </div>
             </section>
 
-            <!-- ========================================================
-                 QUICK ACCESS : grille de cartes-liens vers chaque
-                 sous-page du projet (rendering, physics, scripting,
-                 audio, contributions, team, gallery). C'est la
-                 navigation principale du projet depuis cette page.
-                 Chaque carte = icône SVG inline + titre + description
-                 + flèche "→".
-                 ======================================================== -->
-            <section class="engine-pages" aria-labelledby="engine-pages-title">
+            <section class="engine-panel engine-block engine-section" id="today" data-toc>
+                <p class="engine-section-label" data-i18n="todayLabel">État actuel</p>
+                <h2 data-i18n="todayTitle">Ce que le moteur fait déjà</h2>
+                <p data-i18n="todayIntro">Le dépôt ne contient pas seulement un moteur : il compile un éditeur, un exécutable de jeu et un SDK de scripting, et il fait tourner un mini jeu de course avec sélection de voiture, menus et caméras.</p>
+                <div class="engine-card-grid">
+                    <article class="engine-module-card">
+                        <h3 data-i18n="todayEditorTitle">Un éditeur complet</h3>
+                        <p data-i18n="todayEditorText">Hiérarchie, inspecteur, viewport, content browser, console, éditeur de matériaux, gizmos, undo / redo.</p>
+                    </article>
+                    <article class="engine-module-card">
+                        <h3 data-i18n="todayPhysicsTitle">Une physique de véhicule</h3>
+                        <p data-i18n="todayPhysicsText">Jolt intégré au modèle de scène, colliders composés et un VehicleController réglable depuis l'éditeur.</p>
+                    </article>
+                    <article class="engine-module-card">
+                        <h3 data-i18n="todayRenderTitle">Un rendu temps réel</h3>
+                        <p data-i18n="todayRenderText">Deferred PBR, IBL, ombres directionnelles en cascades, SSAO, bloom, FXAA et texte 2D / 3D.</p>
+                    </article>
+                    <article class="engine-module-card">
+                        <h3 data-i18n="todayScriptTitle">Des scripts rechargés à chaud</h3>
+                        <p data-i18n="todayScriptText">Scripts C++ compilés en DLL, réflexion générée automatiquement et rechargement sans quitter l'éditeur.</p>
+                    </article>
+                    <article class="engine-module-card">
+                        <h3 data-i18n="todayAudioTitle">Un son de moteur crédible</h3>
+                        <p data-i18n="todayAudioText">Audio 3D avec miniaudio et mélange de couches sonores pilotées par le régime moteur.</p>
+                    </article>
+                    <article class="engine-module-card">
+                        <h3 data-i18n="todayNetTitle">Une base réseau</h3>
+                        <p data-i18n="todayNetText">Client / serveur ENet avec paquets sérialisés pour synchroniser position et rotation des joueurs.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="engine-pages engine-section" id="project-pages" aria-labelledby="engine-pages-title" data-toc>
 
                 <div class="engine-pages-heading">
                     <div>
-                        <p class="engine-section-label">Explore the project</p>
-                        <h2 id="engine-pages-title">Project pages</h2>
+                        <p class="engine-section-label" data-i18n="pagesLabel">Explorer le projet</p>
+                        <h2 id="engine-pages-title" data-i18n="pagesTitle">Pages du projet</h2>
                     </div>
 
-                    <p class="engine-pages-intro">
-                        Explore each part of the engine in more detail.
+                    <p class="engine-pages-intro" data-i18n="pagesIntro">
+                        Chaque partie du moteur a sa propre page. La pastille indique s'il s'agit de mon travail ou d'une brique commune.
                     </p>
                 </div>
 
-                <nav class="engine-page-links" aria-label="EnigmaEngine project pages">
+                <nav class="engine-page-links" aria-label="Pages du projet EnigmaEngine" data-i18n-aria="pagesNavLabel">
 
-                    <!-- Carte : Rendering -->
-                    <a class="engine-page-link" href="./rendering.html">
-                        <span class="engine-page-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none">
-                                <path d="M4 18L10 12L14 16L20 8" />
-                                <path d="M4 20H20" />
-                                <path d="M7 6H7.01" />
-                            </svg>
-                        </span>
-
-                        <span class="engine-page-link-content">
-                            <span class="engine-page-link-title">Rendering</span>
-                            <span class="engine-page-link-description">
-                                Graphics pipeline, custom RHI and visual tooling.
-                            </span>
-                        </span>
-
-                        <span class="engine-page-link-arrow" aria-hidden="true">→</span>
-                    </a>
-
-                    <!-- Carte : Physics -->
                     <a class="engine-page-link" href="./physics.html">
                         <span class="engine-page-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none">
@@ -343,18 +130,14 @@
                                 <ellipse cx="12" cy="12" rx="4" ry="9" />
                             </svg>
                         </span>
-
                         <span class="engine-page-link-content">
-                            <span class="engine-page-link-title">Physics</span>
-                            <span class="engine-page-link-description">
-                                Jolt integration, Physicalbody and simulation architecture.
-                            </span>
+                            <span class="engine-page-link-title" data-i18n="navPhysics">Physique</span>
+                            <span class="engine-page-link-description" data-i18n="physicsDesc">Intégration de Jolt, Physicalbody, collisions et VehicleController.</span>
+                            <span class="engine-owner" data-i18n="ownerPersonal">Travail personnel</span>
                         </span>
-
                         <span class="engine-page-link-arrow" aria-hidden="true">→</span>
                     </a>
 
-                    <!-- Carte : Scripting & Hot Reload -->
                     <a class="engine-page-link" href="./scripting.html">
                         <span class="engine-page-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none">
@@ -363,18 +146,14 @@
                                 <path d="M14 5L10 19" />
                             </svg>
                         </span>
-
                         <span class="engine-page-link-content">
-                            <span class="engine-page-link-title">Scripting &amp; Hot Reload</span>
-                            <span class="engine-page-link-description">
-                                Runtime compilation, reflection, DLLs and hot reload.
-                            </span>
+                            <span class="engine-page-link-title" data-i18n="navScripting">Scripting &amp; Hot Reload</span>
+                            <span class="engine-page-link-description" data-i18n="scriptingDesc">Cycle de vie des scripts, réflexion générée, compilation et rechargement de DLL.</span>
+                            <span class="engine-owner" data-i18n="ownerPersonal">Travail personnel</span>
                         </span>
-
                         <span class="engine-page-link-arrow" aria-hidden="true">→</span>
                     </a>
 
-                    <!-- Carte : Audio -->
                     <a class="engine-page-link" href="./audio.html">
                         <span class="engine-page-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none">
@@ -383,36 +162,75 @@
                                 <path d="M19 6.5C21.7 9.2 21.7 14.8 19 17.5" />
                             </svg>
                         </span>
-
                         <span class="engine-page-link-content">
-                            <span class="engine-page-link-title">Audio</span>
-                            <span class="engine-page-link-description">
-                                Spatial audio, listeners, emitters and audio systems.
-                            </span>
+                            <span class="engine-page-link-title" data-i18n="navAudio">Audio</span>
+                            <span class="engine-page-link-description" data-i18n="audioDesc">Audio spatialisé, listeners, emitters et son moteur par couches de régime.</span>
+                            <span class="engine-owner" data-i18n="ownerPersonal">Travail personnel</span>
                         </span>
-
                         <span class="engine-page-link-arrow" aria-hidden="true">→</span>
                     </a>
 
-                    <!-- Carte : My Contributions -->
-                    <a class="engine-page-link" href="./contributions.html">
+                    <a class="engine-page-link" href="./rendering.html">
                         <span class="engine-page-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none">
-                                <path d="M12 3L14.8 8.7L21 9.6L16.5 14L17.6 20.2L12 17.3L6.4 20.2L7.5 14L3 9.6L9.2 8.7L12 3Z" />
+                                <path d="M4 18L10 12L14 16L20 8" />
+                                <path d="M4 20H20" />
+                                <path d="M7 6H7.01" />
                             </svg>
                         </span>
-
                         <span class="engine-page-link-content">
-                            <span class="engine-page-link-title">My Contributions</span>
-                            <span class="engine-page-link-description">
-                                The systems and features I personally developed.
-                            </span>
+                            <span class="engine-page-link-title" data-i18n="navRendering">Rendu</span>
+                            <span class="engine-page-link-description" data-i18n="renderingDesc">RHI maison, deferred PBR, IBL, ombres, SSAO et post-process.</span>
+                            <span class="engine-owner engine-owner--team" data-i18n="ownerTeam">Travail d'équipe</span>
                         </span>
-
                         <span class="engine-page-link-arrow" aria-hidden="true">→</span>
                     </a>
 
-                    <!-- Carte : Team & Workflow -->
+                    <a class="engine-page-link" href="./serialisation.html">
+                        <span class="engine-page-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <ellipse cx="12" cy="5" rx="9" ry="3" />
+                                <path d="M3 5V19A9 3 0 0 0 21 19V5" />
+                                <path d="M3 12A9 3 0 0 0 21 12" />
+                            </svg>
+                        </span>
+                        <span class="engine-page-link-content">
+                            <span class="engine-page-link-title" data-i18n="navSerialisation">Réflexion &amp; Sérialisation</span>
+                            <span class="engine-page-link-description" data-i18n="serialisationDesc">RTTR, scènes et prefabs en JSON, sauvegarde avant play et restauration.</span>
+                            <span class="engine-owner engine-owner--team" data-i18n="ownerTeam">Travail d'équipe</span>
+                        </span>
+                        <span class="engine-page-link-arrow" aria-hidden="true">→</span>
+                    </a>
+
+                    <a class="engine-page-link" href="./tools.html">
+                        <span class="engine-page-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M14.7 6.3A1 1 0 0 0 14.7 7.7L16.3 9.3A1 1 0 0 0 17.7 9.3L21.47 5.53A6 6 0 0 1 13.53 13.47L6.62 20.38A2.12 2.12 0 0 1 3.62 17.38L10.53 10.47A6 6 0 0 1 18.47 2.53L14.7 6.3Z" />
+                            </svg>
+                        </span>
+                        <span class="engine-page-link-content">
+                            <span class="engine-page-link-title" data-i18n="navTools">Éditeur &amp; Outils</span>
+                            <span class="engine-page-link-description" data-i18n="toolsDesc">Panneaux ImGui, gizmos, raccourcis, undo / redo et duplication.</span>
+                            <span class="engine-owner engine-owner--team" data-i18n="ownerMixed">Équipe + perso</span>
+                        </span>
+                        <span class="engine-page-link-arrow" aria-hidden="true">→</span>
+                    </a>
+
+                    <a class="engine-page-link" href="./ai-chat-action.html">
+                        <span class="engine-page-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M21 15A2 2 0 0 1 19 17H7L3 21V5A2 2 0 0 1 5 3H19A2 2 0 0 1 21 5V15Z" />
+                                <path d="M13 7L9 11H13L11 15L15 11H11L13 7Z" />
+                            </svg>
+                        </span>
+                        <span class="engine-page-link-content">
+                            <span class="engine-page-link-title" data-i18n="navAi">IA : chat et actions</span>
+                            <span class="engine-page-link-description" data-i18n="aiDesc">Console IA dans l'éditeur, branchée sur un LLM local via Ollama.</span>
+                            <span class="engine-owner engine-owner--wip" data-i18n="ownerWip">En cours</span>
+                        </span>
+                        <span class="engine-page-link-arrow" aria-hidden="true">→</span>
+                    </a>
+
                     <a class="engine-page-link" href="./team.html">
                         <span class="engine-page-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none">
@@ -422,18 +240,14 @@
                                 <path d="M14.5 14.8C15.3 14.2 16.1 14 17 14C19.4 14 20.6 15.4 20.8 17.8" />
                             </svg>
                         </span>
-
                         <span class="engine-page-link-content">
-                            <span class="engine-page-link-title">Team &amp; Workflow</span>
-                            <span class="engine-page-link-description">
-                                Team organization, responsibilities and collaboration.
-                            </span>
+                            <span class="engine-page-link-title" data-i18n="navTeam">Équipe &amp; Bilan</span>
+                            <span class="engine-page-link-description" data-i18n="teamDesc">Organisation, répartition du travail, limites actuelles et suite du projet.</span>
+                            <span class="engine-owner engine-owner--team" data-i18n="ownerTeam">Travail d'équipe</span>
                         </span>
-
                         <span class="engine-page-link-arrow" aria-hidden="true">→</span>
                     </a>
 
-                    <!-- Carte : Gallery -->
                     <a class="engine-page-link" href="./gallery.html">
                         <span class="engine-page-icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none">
@@ -442,268 +256,20 @@
                                 <path d="M3 16L8 12L12 15L15 12L21 17" />
                             </svg>
                         </span>
-
                         <span class="engine-page-link-content">
-                            <span class="engine-page-link-title">Gallery</span>
-                            <span class="engine-page-link-description">
-                                Screenshots, editor views and visual documentation.
-                            </span>
+                            <span class="engine-page-link-title" data-i18n="navGallery">Galerie</span>
+                            <span class="engine-page-link-description" data-i18n="galleryDesc">Captures de l'éditeur, de la démo de course et du rendu.</span>
                         </span>
-
                         <span class="engine-page-link-arrow" aria-hidden="true">→</span>
                     </a>
 
                 </nav>
-
             </section>
-
-            <!-- ============================================================
-                 CONTENU HISTORIQUE DÉSACTIVÉ (tout en commentaire ci-dessous)
-                 ------------------------------------------------------------
-                 Ces sections (#rendering, #physics, #scripting, #sound,
-                 #contributions, #team, #gallery) formaient l'ancienne
-                 version "tout sur une seule page" du projet. Le contenu a
-                 depuis été éclaté en sous-pages séparées (voir la grille
-                 engine-pages ci-dessus). Elles restent ici en commentaire,
-                 probablement à titre de brouillon / texte de réserve à
-                 recycler dans les sous-pages correspondantes.
-
-                 Détail de ce qui est conservé plus bas :
-                 - #rendering       : bloc texte + image (pipeline graphique)
-                 - #physics         : GROS bloc très détaillé sur Physicalbody
-                                      (Body/Collider, compound collider,
-                                      synchronisation transform/scène) — sans
-                                      doute la base de future contributions.html
-                                      ou physics.html
-                 - #scripting       : bloc texte + image (hot reload)
-                 - #sound           : bloc texte + image (audio)
-                 - #contributions   : titre + paragraphe (à développer)
-                 - #team            : titre + paragraphe (à développer)
-                 - #gallery         : grille de 4 captures d'écran
-                 ============================================================ -->
-
-            <!-- <section class="text-left-img-right engine-section" id="rendering">
-                <div class="content">
-                    <h2>Rendu</h2>
-                    <p>Bloc prevu pour raconter la pipeline graphique, le RHI, les choix de rendu et l'outillage visuel associe.</p>
-                </div>
-                <div class="media">
-                    <img src="editor-material-screen3.png" alt="Inspector et reglages de materiau dans EnigmaEngine" class="rendered-img" loading="lazy" decoding="async">
-                </div>
-            </section> -->
-
-            <!-- <section class="detail-content text-full engine-section" id="physics">
-                <div class="engine-panel engine-physics-story">
-                    <div class="engine-physics-intro">
-                        <p class="engine-section-label">Travail Personnel</p>
-                        <h2>Physique</h2>
-                        <p class="detail-lead">Sur cette partie, mon objectif n'etait pas seulement d'integrer Jolt, mais de construire une couche moteur capable de relier scene, gameplay, editeur et simulation de maniere coherente.</p>
-                    </div>
-
-                    <div class="engine-note engine-physics-banner">
-                        Cette brique est l'une des plus importantes du projet pour moi. Elle montre a la fois une vraie architecture moteur et une contribution tres concrete sur le gameplay.
-                    </div>
-
-                    <div class="engine-physics-layout">
-                        <div class="engine-physics-copy">
-                            <h3>Physicalbody : le manager physique local du GameObject</h3>
-                            <p>Dans EnigmaEngine, un objet physique ne parle pas directement a Jolt. J'ai choisi d'introduire une couche centrale, <code>Physicalbody</code>, qui agit comme le manager physique local du <code>GameObject</code>. C'est lui qui centralise les colliders, le body Jolt actif, le type de mouvement, la synchronisation des transforms et les remontees utiles au gameplay.</p>
-                            <figure class="engine-figure engine-physics-figure">
-                                <img src="../../automatisation/ENGINE/physicalbody_schema.png" alt="Schema simplifie du fonctionnement du Physicalbody dans EnigmaEngine" class="rendered-img" loading="lazy" decoding="async">
-                            </figure>
-                            <div class="engine-physics-followup">
-                                <p>Le point important est que cette classe ne remplace pas tous les autres composants. Elle les coordonne. Si un <code>Collider</code> ou un <code>Rigidbody</code> est ajoute a un objet, c'est le <code>Physicalbody</code> qui determine comment l'integrer a la representation physique globale et comment garder une seule source de verite pendant la simulation.</p>
-                                <p>J'ai volontairement separe cette couche en trois responsabilites complementaires : le <code>Collider</code> decrit la forme, le <code>Body</code> porte la reference Jolt et le <code>BodyID</code>, et le <code>Physicalbody</code> fait le lien entre les deux pour produire une representation physique unique, lisible et exploitable par le moteur.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="engine-physics-detail-grid">
-                        <article class="engine-module-card">
-                            <h3>Body + Collider</h3>
-                            <p>Le <code>Body</code> gere la reference Jolt au vrai corps physique. Le <code>Collider</code>, lui, ne gere que la forme physique et ses variations. Cette separation m'a permis d'eviter une classe monolithique et de garder une couche plus claire a maintenir.</p>
-                        </article>
-
-                        <article class="engine-module-card">
-                            <h3>Compound collider</h3>
-                            <p>Plutot que de laisser vivre plusieurs petits colliders de facon isolee, le <code>Physicalbody</code> les recupere dans une seule liste, reconstruit une shape composee, puis cree ou met a jour le body a partir de ce volume global.</p>
-                        </article>
-
-                        <article class="engine-module-card">
-                            <h3>Facade runtime</h3>
-                            <p>Le <code>Rigidbody</code> reste la facade propre cote moteur, mais les vraies operations physiques passent par le <code>Physicalbody</code> : vitesses, forces, motion type, masse, gravity factor ou mode trigger.</p>
-                        </article>
-                    </div>
-
-                    <div class="engine-physics-utility-grid">
-                        <article class="engine-contrib-card">
-                            <h3>Bloc utilitaire rigidbody</h3>
-                            <p>Une premiere zone de la classe sert de socle aux commandes du <code>Rigidbody</code>. Cela evite de dupliquer la logique physique dans plusieurs composants et garde un seul point d'entree pour agir sur la simulation.</p>
-                            <ul class="engine-physics-points">
-                                <li>gestion des vitesses lineaires et angulaires</li>
-                                <li>ajout de forces et changement de motion type</li>
-                                <li>gestion de la masse, de la gravite et du mode trigger</li>
-                            </ul>
-                        </article>
-
-                        <article class="engine-contrib-card">
-                            <h3>Bloc utilitaire transform</h3>
-                            <p>Une seconde zone de <code>Physicalbody</code> est dediee a la synchronisation scene &lt;-&gt; physique. Toute la transform d'un objet physique est pilotee par les calculs physiques, donc il faut maintenir en permanence la coherence entre la scene et Jolt.</p>
-                            <ul class="engine-physics-points">
-                                <li>mise a jour du <code>Transform</code> moteur a partir de la simulation</li>
-                                <li>reconstruction du transform physique quand un objet est manipule</li>
-                                <li>gestion du lien parent / enfant quand la physique reprend la main</li>
-                            </ul>
-                        </article>
-                    </div>
-
-                    <div class="engine-note">
-                        En mode play, deplacer un objet physique avec les gizmos ne peut pas se limiter a bouger son visuel. Si le <code>Transform</code> moteur change sans mise a jour du body Jolt, la scene et la simulation divergent. Le role du <code>Physicalbody</code> est justement de resynchroniser ces deux mondes.
-                    </div>
-                </div>
-            </section> -->
-
-            <!-- <section class="text-left-img-right engine-section" id="scripting">
-                <div class="content">
-                    <h2>Scripting et hot reload</h2>
-                    <p>Bloc prevu pour expliquer les macros, la reflection, la compilation runtime, le rechargement des DLL et la restauration des donnees.</p>
-                </div>
-                <div class="media">
-                    <img src="hero-screen2.png" alt="Editeur EnigmaEngine avec outils de scripting" class="rendered-img" loading="lazy" decoding="async">
-                </div>
-            </section>
-
-            <section class="text-right-img-left engine-section" id="sound">
-                <div class="content">
-                    <h2>Audio</h2>
-                    <p>Bloc prevu pour presenter la spatialisation, les listeners, les emitters et le travail sur le son moteur.</p>
-                </div>
-                <div class="media">
-                    <img src="menu-screen5.png" alt="Capture de la demo EnigmaEngine" class="rendered-img" loading="lazy" decoding="async">
-                </div>
-            </section>
-
-            <section class="detail-content text-full engine-section" id="contributions">
-                <div class="detail-text">
-                    <h2>Mes contributions</h2>
-                    <p>Bloc dedie a la separation claire entre les systemes portes directement et le resultat collectif du projet.</p>
-                </div>
-            </section>
-
-            <section class="detail-content text-full engine-section" id="team">
-                <div class="detail-text">
-                    <h2>Travail d'equipe</h2>
-                    <p>Bloc prevu pour expliciter ce qui releve du projet global et ce qui ne doit pas etre attribue a une seule personne.</p>
-                </div>
-            </section>
-
-            <section class="detail-content text-full engine-section" id="gallery">
-                <div>
-                    <h2 data-i18n="galleryTitle">Galerie</h2>
-                    <p class="detail-lead">Zone reservee aux captures finales, comparatifs et visuels qui appuieront chaque affirmation importante.</p>
-                    <div class="gallery-grid">
-                        <figure class="gallery-item">
-                            <img src="hero-screen2.png" alt="Capture 1 d'EnigmaEngine" loading="lazy" decoding="async">
-                        </figure>
-                        <figure class="gallery-item">
-                            <img src="editor-material-screen3.png" alt="Capture 2 d'EnigmaEngine" loading="lazy" decoding="async">
-                        </figure>
-                        <figure class="gallery-item">
-                            <img src="physics-collider-screen4.png" alt="Capture 3 d'EnigmaEngine" loading="lazy" decoding="async">
-                        </figure>
-                        <figure class="gallery-item">
-                            <img src="drive-screen6.png" alt="Capture 4 d'EnigmaEngine" loading="lazy" decoding="async">
-                        </figure>
-                    </div>
-                </div>
-            </section> -->
         </div>
     </main>
 
-    <!-- Script commun (probablement gestion i18n / bouton langue) -->
+    <script src="./engine-i18n.js"></script>
     <script src="../../annexe.js"></script>
-
-    <!-- ================================================================
-         SCRIPT INLINE : comportement du menu burger (TOC) de cette page
-         1) Ouverture/fermeture au clic du bouton burger (utile sur
-            mobile, en complément du survol géré en CSS)
-         2) Fermeture automatique du menu quand on clique en dehors
-         3) Fermeture automatique quand on clique un lien de la TOC
-         4) IntersectionObserver : surligne dans la TOC le lien de la
-            section actuellement visible à l'écran pendant le scroll
-            (classe .is-active)
-         ================================================================ -->
-    <script>
-        const engineToc = document.getElementById("engine-toc");
-        const engineTocToggle = document.getElementById("engine-toc-toggle");
-        const engineTocLinks = Array.from(document.querySelectorAll(".engine-toc-link"));
-        const engineSections = Array.from(document.querySelectorAll(".engine-section[id]"));
-
-        if (engineToc && engineTocToggle) {
-            // Ouvre ou ferme le panneau (toggle classe .is-open + aria-expanded)
-            const setOpenState = (isOpen) => {
-                engineToc.classList.toggle("is-open", isOpen);
-                engineTocToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-            };
-
-            // Clic sur le bouton burger : bascule l'état ouvert/fermé
-            engineTocToggle.addEventListener("click", (event) => {
-                event.stopPropagation(); // évite que le clic remonte jusqu'au document
-                setOpenState(!engineToc.classList.contains("is-open"));
-            });
-
-            // Clic n'importe où en dehors du composant TOC : on referme
-            document.addEventListener("click", (event) => {
-                if (!engineToc.contains(event.target)) {
-                    setOpenState(false);
-                }
-            });
-
-            // Clic sur un lien de la TOC : on referme le menu (navigation faite)
-            engineTocLinks.forEach((link) => {
-                link.addEventListener("click", () => {
-                    setOpenState(false);
-                });
-            });
-        }
-
-        // Surlignage automatique du lien correspondant à la section
-        // actuellement visible à l'écran pendant le scroll.
-        if ("IntersectionObserver" in window && engineTocLinks.length && engineSections.length) {
-            // Table de correspondance id de section -> lien de la TOC
-            const linksById = new Map(
-                engineTocLinks.map((link) => [link.getAttribute("href").slice(1), link])
-            );
-
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        const id = entry.target.getAttribute("id");
-                        const link = linksById.get(id);
-
-                        if (!link) {
-                            return;
-                        }
-
-                        if (entry.isIntersecting) {
-                            // On retire l'état actif de tous les liens, puis on
-                            // l'ajoute uniquement à celui de la section visible
-                            engineTocLinks.forEach((item) => item.classList.remove("is-active"));
-                            link.classList.add("is-active");
-                        }
-                    });
-                },
-                {
-                    // Zone de déclenchement resserrée en haut/bas de l'écran
-                    // pour ne considérer "visible" que la section proche du
-                    // centre de l'écran (sous la nav sticky notamment)
-                    rootMargin: "-22% 0px -65% 0px",
-                    threshold: 0
-                }
-            );
-
-            engineSections.forEach((section) => observer.observe(section));
-        }
-    </script>
+    <script src="./engine-toc.js"></script>
 </body>
 </html>

@@ -224,7 +224,6 @@ button:hover,
 
 .back-btn:hover {
     background: var(--accent-color);
-    color: var(--bg-color);
     border-color: var(--accent-color);
     transform: translateX(-5px);
 }
@@ -1592,6 +1591,305 @@ body[data-page="engine"] .detail-container {
 .engine-page pre {
     margin-top: 14px;
     border: 1px solid rgba(56, 189, 248, 0.18);
+}
+
+/* --- 9e. Sous-pages du moteur (physique, scripting, audio...) ---
+   Gabarit commun : en-tête (.engine-subhero), blocs (.engine-block),
+   cartes, pipeline en étapes (.engine-flow), galerie et pagination. */
+
+.engine-subhero {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 12px 0 36px;
+}
+
+.engine-subhero h1 {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    line-height: 1;
+}
+
+.engine-subhero .detail-lead {
+    max-width: 68ch;
+    color: #c9d7e7;
+}
+
+/* Puces techniques sous l'en-tête */
+.engine-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+    list-style: none;
+}
+
+.engine-tags li {
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    color: #dbeafe;
+    font-size: 0.85rem;
+}
+
+/* Pastille "travail personnel / équipe / en cours" */
+.engine-owner {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.32);
+    color: #7dd3fc;
+}
+
+.engine-owner--team {
+    background: rgba(167, 139, 250, 0.12);
+    border-color: rgba(167, 139, 250, 0.34);
+    color: #c4b5fd;
+}
+
+.engine-owner--wip {
+    background: rgba(251, 191, 36, 0.1);
+    border-color: rgba(251, 191, 36, 0.34);
+    color: #fcd34d;
+}
+
+/* Bloc de contenu = panneau + espacement vertical */
+.engine-block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.engine-block h2 {
+    font-size: clamp(1.45rem, 2.6vw, 1.9rem);
+    line-height: 1.2;
+}
+
+.engine-block > .engine-section-label {
+    margin-bottom: -8px;
+}
+
+.engine-block p {
+    color: #dbe4f4;
+    line-height: 1.7;
+}
+
+.engine-block code,
+.engine-module-card code,
+.engine-contrib-card code {
+    padding: 1px 6px;
+    border-radius: 6px;
+    background: rgba(56, 189, 248, 0.1);
+    color: #bae6fd;
+    font-size: 0.9em;
+}
+
+.engine-block pre code {
+    padding: 0;
+    background: none;
+    color: inherit;
+}
+
+/* Grille de cartes 3 colonnes (2 colonnes avec .engine-card-grid--2) */
+.engine-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.engine-card-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.engine-card-grid ul {
+    margin-top: 10px;
+    padding-left: 18px;
+    color: #dbe4f4;
+}
+
+.engine-card-grid li + li {
+    margin-top: 6px;
+}
+
+/* Texte + visuel côte à côte */
+.engine-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: center;
+}
+
+.engine-split > div {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Capture d'écran affichée en entier (pas de recadrage) */
+.engine-shot .rendered-img {
+    min-height: 0;
+    height: auto;
+    object-fit: contain;
+    border-radius: 16px;
+}
+
+/* Pipeline en étapes numérotées */
+.engine-flow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+    list-style: none;
+    counter-reset: engine-step;
+}
+
+.engine-flow li {
+    position: relative;
+    padding: 16px 16px 16px 50px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(56, 189, 248, 0.14);
+    color: #dbe4f4;
+    line-height: 1.5;
+    counter-increment: engine-step;
+}
+
+.engine-flow li::before {
+    content: counter(engine-step, decimal-leading-zero);
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    color: var(--accent-color);
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.9;
+}
+
+.engine-flow strong {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--text-color);
+}
+
+/* Tableau compact (réglages, correspondances) */
+.engine-table-wrap {
+    overflow-x: auto;
+}
+
+.engine-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.engine-table th,
+.engine-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: left;
+    vertical-align: top;
+    color: #dbe4f4;
+}
+
+.engine-table th {
+    color: #7dd3fc;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* Galerie de captures */
+.engine-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.engine-gallery .engine-figure:first-child {
+    grid-column: 1 / -1;
+}
+
+.engine-gallery a {
+    display: block;
+}
+
+/* Pagination précédent / suivant en bas des sous-pages */
+.engine-pager {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 12px 0 40px;
+}
+
+.engine-pager a {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 20px;
+    border-radius: 14px;
+    border: 1px solid rgba(56, 189, 248, 0.16);
+    background: rgba(15, 23, 42, 0.5);
+    color: var(--text-color);
+    text-decoration: none;
+    transition: border-color 0.22s ease, transform 0.22s ease;
+}
+
+.engine-pager a:hover,
+.engine-pager a:focus-visible {
+    border-color: rgba(56, 189, 248, 0.4);
+    transform: translateY(-2px);
+}
+
+.engine-pager small {
+    color: var(--secondary-color);
+}
+
+.engine-pager .engine-pager-next {
+    grid-column: 2;
+    text-align: right;
+}
+
+/* Cartes d'infos sous le visuel du hero : pleine largeur */
+.engine-hero .engine-meta-grid {
+    width: 100%;
+    margin-top: 0;
+}
+
+/* Pastille sur les cartes de la page d'accueil du moteur */
+.engine-page-link-content .engine-owner {
+    margin-top: 6px;
+    padding: 2px 9px;
+    font-size: 0.68rem;
+}
+
+@media (max-width: 900px) {
+    .engine-card-grid,
+    .engine-split,
+    .engine-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .engine-pager {
+        grid-template-columns: 1fr;
+    }
+
+    .engine-pager .engine-pager-next {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .engine-panel {
+        padding: 20px;
+    }
 }
 
 

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!-- ================================================================
+     SOUS-PAGE EnigmaEngine : Galerie
+     Textes : français dans le HTML, anglais dans ./engine-i18n.js
+     (clés sous "engine-gallery"). Chaque image ouvre sa version pleine taille.
+     ================================================================ -->
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Captures d'EnigmaEngine : éditeur, démo de course, matériaux et colliders.">
+	<title>Galerie | EnigmaEngine</title>
+	<link rel="stylesheet" href="../../css/annexe.css">
+</head>
+<body class="project-detail-page engine-page" data-page="engine-gallery" data-title-key="pageTitle">
+	<nav class="detail-nav">
+		<div class="detail-nav-inner">
+			<a href="./engine.html" class="back-btn back-btn-minimal">
+				<span class="arrow">&larr;</span>
+				<span class="text" data-i18n="backToEngine">Retour</span>
+			</a>
+			<div class="detail-nav-actions">
+				<button class="lang-toggle" id="lang-toggle" type="button" aria-label="Changer la langue">EN</button>
+				<aside class="engine-toc engine-nav-toc" id="engine-toc">
+					<button class="engine-toc-handle" id="engine-toc-toggle" type="button" aria-expanded="false" aria-controls="engine-toc-nav" aria-label="Afficher la table des matières" data-i18n-aria="tocToggle">
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+					</button>
+					<div class="engine-toc-panel">
+						<p class="engine-toc-eyebrow" data-i18n="tocTitle">Sur cette page</p>
+						<nav class="engine-toc-nav" id="engine-toc-nav" aria-label="Sur cette page" data-i18n-aria="tocTitle"><ol class="engine-toc-list"></ol></nav>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</nav>
+
+	<main class="detail-container engine-layout">
+		<div class="engine-main">
+
+			<header class="engine-subhero engine-section" id="intro" data-toc>
+				<p class="engine-section-label" data-i18n="introLabel">Captures</p>
+				<h1 data-i18n="title">Galerie</h1>
+				<p class="detail-lead" data-i18n="lead">L'éditeur, la démo de course et quelques vues techniques, toutes capturées dans EnigmaEngine. Cliquez sur une image pour l'ouvrir en pleine taille.</p>
+			</header>
+
+			<section class="engine-gallery engine-section" id="shots">
+				<figure class="engine-figure engine-shot">
+					<a href="img/drive-screen6.png"><img src="img/drive-screen6.png" alt="Une voiture en course dans la démo d'EnigmaEngine" data-i18n-alt="shot1Alt" class="rendered-img" loading="lazy" decoding="async"></a>
+					<figcaption data-i18n="shot1">La démo de course, vue depuis la caméra de jeu.</figcaption>
+				</figure>
+				<figure class="engine-figure engine-shot">
+					<a href="img/editor-screen1.png"><img src="img/editor-screen1.png" alt="L'éditeur d'EnigmaEngine" data-i18n-alt="shot2Alt" class="rendered-img" loading="lazy" decoding="async"></a>
+					<figcaption data-i18n="shot2">L'éditeur : hiérarchie de la scène de course, viewport et content browser.</figcaption>
+				</figure>
+				<figure class="engine-figure engine-shot">
+					<a href="img/hero-screen2.png"><img src="img/hero-screen2.png" alt="Rendu d'une voiture dans EnigmaEngine" data-i18n-alt="shot3Alt" class="rendered-img" loading="lazy" decoding="async"></a>
+					<figcaption data-i18n="shot3">Rendu PBR d'une voiture.</figcaption>
+				</figure>
+				<figure class="engine-figure engine-shot">
+					<a href="img/editor-material-screen3.png"><img src="img/editor-material-screen3.png" alt="Édition d'un matériau dans EnigmaEngine" data-i18n-alt="shot4Alt" class="rendered-img" loading="lazy" decoding="async"></a>
+					<figcaption data-i18n="shot4">Édition d'un matériau.</figcaption>
+				</figure>
+				<figure class="engine-figure engine-shot">
+					<a href="img/physics-collider-screen4.png"><img src="img/physics-collider-screen4.png" alt="Colliders affichés dans l'éditeur d'EnigmaEngine" data-i18n-alt="shot5Alt" class="rendered-img" loading="lazy" decoding="async"></a>
+					<figcaption data-i18n="shot5">Colliders et physique dans l'éditeur.</figcaption>
+				</figure>
+				<figure class="engine-figure engine-shot">
+					<a href="img/menu-screen5.png"><img src="img/menu-screen5.png" alt="Menu de la démo de course d'EnigmaEngine" data-i18n-alt="shot6Alt" class="rendered-img" loading="lazy" decoding="async"></a>
+					<figcaption data-i18n="shot6">Menu de la démo, construit avec les widgets du moteur.</figcaption>
+				</figure>
+			</section>
+
+			<nav class="engine-pager" aria-label="Pages du moteur" data-i18n-aria="pagerLabel">
+				<a href="./team.html"><small data-i18n="pagerPrev">← Précédent</small><span data-i18n="navTeam">Équipe &amp; Bilan</span></a>
+				<a class="engine-pager-next" href="./engine.html"><small data-i18n="pagerBackHome">Retour au début →</small><span data-i18n="navHome">Accueil du moteur</span></a>
+			</nav>
+		</div>
+	</main>
+	<script src="./engine-i18n.js"></script>
+	<script src="../../annexe.js"></script>
+	<script src="./engine-toc.js"></script>
+</body>
+</html>

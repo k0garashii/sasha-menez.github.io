@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!-- ================================================================
+     SOUS-PAGE EnigmaEngine : IA, chat et actions (travail personnel en cours)
+     Textes : français dans le HTML, anglais dans ./engine-i18n.js
+     (clés sous "engine-ai"). Table des matières : sections [data-toc]
+     ================================================================ -->
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Console IA dans l'éditeur d'EnigmaEngine : un LLM local via Ollama, et la piste des actions pilotées par la réflexion.">
+	<title>IA : chat et actions | EnigmaEngine</title>
+	<link rel="stylesheet" href="../../css/annexe.css">
+</head>
+<body class="project-detail-page engine-page" data-page="engine-ai" data-title-key="pageTitle">
+	<nav class="detail-nav">
+		<div class="detail-nav-inner">
+			<a href="./engine.html" class="back-btn back-btn-minimal">
+				<span class="arrow">&larr;</span>
+				<span class="text" data-i18n="backToEngine">Retour</span>
+			</a>
+			<div class="detail-nav-actions">
+				<button class="lang-toggle" id="lang-toggle" type="button" aria-label="Changer la langue">EN</button>
+				<aside class="engine-toc engine-nav-toc" id="engine-toc">
+					<button class="engine-toc-handle" id="engine-toc-toggle" type="button" aria-expanded="false" aria-controls="engine-toc-nav" aria-label="Afficher la table des matières" data-i18n-aria="tocToggle">
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+					</button>
+					<div class="engine-toc-panel">
+						<p class="engine-toc-eyebrow" data-i18n="tocTitle">Sur cette page</p>
+						<nav class="engine-toc-nav" id="engine-toc-nav" aria-label="Sur cette page" data-i18n-aria="tocTitle"><ol class="engine-toc-list"></ol></nav>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</nav>
+
+	<main class="detail-container engine-layout">
+		<div class="engine-main">
+
+			<header class="engine-subhero engine-section" id="intro" data-toc>
+				<span class="engine-owner engine-owner--wip" data-i18n="ownerWipPersonal">Travail personnel · en cours</span>
+				<p class="engine-section-label" data-i18n="introLabel">LLM local</p>
+				<h1 data-i18n="title">IA : chat et actions</h1>
+				<p class="detail-lead" data-i18n="lead">Depuis la fin du projet de cours, je continue à faire évoluer le moteur de mon côté. Le chantier en cours : un assistant intégré à l'éditeur, capable d'abord de répondre, puis d'agir sur la scène.</p>
+				<ul class="engine-tags">
+					<li>Ollama</li>
+					<li>Llama 3</li>
+					<li>cpp-httplib</li>
+					<li>RTTR</li>
+				</ul>
+			</header>
+
+			<section class="engine-panel engine-block engine-section" id="chat" data-toc>
+				<p class="engine-section-label" data-i18n="chatLabel">Fonctionnel</p>
+				<h2 data-i18n="chatTitle">La console IA</h2>
+				<p data-i18n-html="chatText1">Un panneau <code>AIConsole</code> s'ajoute à l'éditeur, à côté de la console de logs. On y écrit une question, on l'envoie avec <em>Send</em> ou Ctrl + Entrée, et l'historique s'affiche comme une messagerie, avec défilement automatique.</p>
+				<p data-i18n-html="chatText2">Le modèle tourne <strong>en local</strong> avec Ollama : le moteur envoie la question en JSON à <code>127.0.0.1:11434/api/chat</code> via cpp-httplib. Pas de clé d'API, pas de données envoyées en ligne, et le modèle peut être changé sans toucher au moteur.</p>
+<pre><code>nlohmann::json body = {
+    {"model", "llama3"},
+    {"messages", {{{"role", "user"}, {"content", message}}}},
+    {"stream", false}
+};
+auto response = cli.Post("/api/chat", body.dump(), "application/json");</code></pre>
+				<div class="engine-note" data-i18n="chatNote">Les erreurs de connexion et les codes HTTP inattendus sont remontés explicitement, pour savoir tout de suite si c'est Ollama qui ne tourne pas.</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="actions" data-toc>
+				<p class="engine-section-label" data-i18n="actLabel">En cours</p>
+				<h2 data-i18n="actTitle">Des actions, pas seulement des réponses</h2>
+				<p data-i18n-html="actText1">L'objectif est qu'une demande comme « ajoute un rigidbody à la voiture et baisse sa masse » modifie vraiment la scène. Le moteur a déjà ce qu'il faut pour ça : la réflexion RTTR décrit chaque composant, ses propriétés et ses méthodes.</p>
+				<ol class="engine-flow">
+					<li data-i18n-html="actStep1"><strong>Contexte</strong>Décrire au modèle la scène et les composants disponibles, à partir de la réflexion.</li>
+					<li data-i18n-html="actStep2"><strong>Réponse structurée</strong>Demander une action au format JSON plutôt qu'un texte libre.</li>
+					<li data-i18n-html="actStep3"><strong>Validation</strong>Vérifier que l'objet, le composant et la propriété existent avant d'agir.</li>
+					<li data-i18n-html="actStep4"><strong>Exécution</strong>Appliquer l'action via RTTR, en l'enregistrant dans l'undo / redo.</li>
+				</ol>
+				<div class="engine-note" data-i18n-html="actNote">État actuel : le chat fonctionne. Le point d'entrée <code>ApplyAction</code> existe mais n'est pas encore implémenté. Passer par l'undo / redo est un choix délibéré : une action de l'IA doit toujours pouvoir être annulée.</div>
+			</section>
+
+			<nav class="engine-pager" aria-label="Pages du moteur" data-i18n-aria="pagerLabel">
+				<a href="./tools.html"><small data-i18n="pagerPrev">← Précédent</small><span data-i18n="navTools">Éditeur &amp; Outils</span></a>
+				<a class="engine-pager-next" href="./team.html"><small data-i18n="pagerNext">Suivant →</small><span data-i18n="navTeam">Équipe &amp; Bilan</span></a>
+			</nav>
+		</div>
+	</main>
+	<script src="./engine-i18n.js"></script>
+	<script src="../../annexe.js"></script>
+	<script src="./engine-toc.js"></script>
+</body>
+</html>

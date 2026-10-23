@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!-- ================================================================
+     SOUS-PAGE EnigmaEngine : Audio (travail personnel)
+     Textes : français dans le HTML, anglais dans ./engine-i18n.js
+     (clés sous "engine-audio"). Table des matières : sections [data-toc]
+     Le petit script en bas anime l'illustration des couches RPM.
+     ================================================================ -->
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Audio d'EnigmaEngine : miniaudio, sons spatialisés et son de moteur de voiture par couches de régime.">
+	<title>Audio | EnigmaEngine</title>
+	<link rel="stylesheet" href="../../css/annexe.css">
+	<style>
+		.rpm-demo { display: flex; flex-direction: column; gap: 14px; padding: 18px; border-radius: 16px; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(56, 189, 248, 0.14); }
+		.rpm-demo label { display: flex; justify-content: space-between; gap: 12px; color: #dbe4f4; font-weight: 600; }
+		.rpm-demo output { color: var(--accent-color); font-variant-numeric: tabular-nums; }
+		.rpm-demo input[type="range"] { width: 100%; accent-color: var(--accent-color); }
+		.rpm-bars { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px; align-items: end; height: 140px; }
+		.rpm-bar { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 6px; height: 100%; }
+		.rpm-bar span { width: 100%; min-height: 2px; border-radius: 6px 6px 2px 2px; background: linear-gradient(180deg, #7dd3fc, #0284c7); transition: height 0.12s ease; }
+		.rpm-bar small { color: var(--secondary-color); font-size: 0.75rem; white-space: nowrap; }
+	</style>
+</head>
+<body class="project-detail-page engine-page" data-page="engine-audio" data-title-key="pageTitle">
+	<nav class="detail-nav">
+		<div class="detail-nav-inner">
+			<a href="./engine.html" class="back-btn back-btn-minimal">
+				<span class="arrow">&larr;</span>
+				<span class="text" data-i18n="backToEngine">Retour</span>
+			</a>
+			<div class="detail-nav-actions">
+				<button class="lang-toggle" id="lang-toggle" type="button" aria-label="Changer la langue">EN</button>
+				<aside class="engine-toc engine-nav-toc" id="engine-toc">
+					<button class="engine-toc-handle" id="engine-toc-toggle" type="button" aria-expanded="false" aria-controls="engine-toc-nav" aria-label="Afficher la table des matières" data-i18n-aria="tocToggle">
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+					</button>
+					<div class="engine-toc-panel">
+						<p class="engine-toc-eyebrow" data-i18n="tocTitle">Sur cette page</p>
+						<nav class="engine-toc-nav" id="engine-toc-nav" aria-label="Sur cette page" data-i18n-aria="tocTitle"><ol class="engine-toc-list"></ol></nav>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</nav>
+
+	<main class="detail-container engine-layout">
+		<div class="engine-main">
+
+			<header class="engine-subhero engine-section" id="intro" data-toc>
+				<span class="engine-owner" data-i18n="ownerPersonal">Travail personnel</span>
+				<p class="engine-section-label" data-i18n="introLabel">miniaudio</p>
+				<h1 data-i18n="title">Audio</h1>
+				<p class="detail-lead" data-i18n="lead">Dans un jeu de course, le son du moteur fait une grande partie de la sensation de vitesse. Au-delà du système audio lui-même, j'ai surtout cherché à obtenir un moteur de voiture crédible à partir d'enregistrements réels.</p>
+				<ul class="engine-tags">
+					<li>miniaudio</li>
+					<li>Audio 3D</li>
+					<li>Doppler</li>
+					<li data-i18n="tagLayers">Couches RPM</li>
+				</ul>
+			</header>
+
+			<section class="engine-panel engine-block engine-section" id="system" data-toc>
+				<p class="engine-section-label" data-i18n="sysLabel">Architecture</p>
+				<h2 data-i18n="sysTitle">Trois briques, calquées sur Unity</h2>
+				<p data-i18n-html="sysText1">Le système repose sur un <code>ma_engine</code> de miniaudio, encapsulé dans un <code>SoundManager</code> unique. Côté scène, deux composants suffisent :</p>
+				<div class="engine-card-grid">
+					<article class="engine-module-card">
+						<h3>SoundManager</h3>
+						<p data-i18n="sysCard1Text">Initialise le moteur audio, tient la liste des émetteurs et des écouteurs et les met à jour à chaque frame.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3>SoundListener</h3>
+						<p data-i18n="sysCard2Text">Les oreilles du joueur : position et orientation transmises à miniaudio. S'il y en a plusieurs, celui de la caméra de jeu active est prioritaire.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3>SoundEmitter</h3>
+						<p data-i18n="sysCard3Text">Porte un ou plusieurs sons et les place à la position monde de son objet. Son volume est réglable depuis l'inspecteur.</p>
+					</article>
+				</div>
+				<p data-i18n-html="sysText2">Chaque <code>Sound</code> expose le strict nécessaire au gameplay : lecture, boucle, spatialisation, volume, pitch, position et vitesse. La vitesse transmise à miniaudio lui permet en plus de calculer l'effet Doppler.</p>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="engine-sound" data-toc>
+				<p class="engine-section-label" data-i18n="engLabel">Sensation</p>
+				<h2 data-i18n="engTitle">Un moteur de voiture par couches de régime</h2>
+				<p data-i18n-html="engText1">Un seul enregistrement accéléré ou ralenti sonne vite faux. J'ai donc utilisé huit boucles enregistrées sur une Mazda MX-5 à régime fixe, de 0 à 7 000 tr/min. Le régime renvoyé par le <code>VehicleController</code> décide du mélange entre ces boucles.</p>
+				<p data-i18n-html="engText2">Chaque couche reçoit un poids en forme de triangle : 1 à son régime d'enregistrement, 0 au régime des couches voisines. À tout instant, au plus deux couches sont donc audibles et leur somme reste constante, ce qui évite les sauts de volume.</p>
+<pre><code>float SoundEmitter::ComputeLayerWeight(float rpm, float min, float center, float max)
+{
+    if (rpm &lt; min || rpm &gt; max)
+        return 0.f;
+    if (rpm == center)
+        return 1.f;
+    if (rpm &lt; center)
+        return (rpm - min) / (center - min);
+    return 1.f - ((rpm - center) / (max - center));
+}</code></pre>
+				<div class="rpm-demo">
+					<label for="rpm-input"><span data-i18n="demoLabel">Régime moteur (illustration)</span><output id="rpm-output" for="rpm-input">2 500 tr/min</output></label>
+					<input id="rpm-input" type="range" min="0" max="7000" step="10" value="2500">
+					<div class="rpm-bars" id="rpm-bars" aria-hidden="true"></div>
+				</div>
+				<p data-i18n-html="engText3">Le volume seul ne suffit pas : entre deux enregistrements, le pitch de chaque couche est aussi ajusté pour que la montée en régime reste continue. C'est sur ce réglage fin du pitch et du volume que s'est joué l'essentiel du travail.</p>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="limits" data-toc>
+				<p class="engine-section-label" data-i18n="limLabel">Recul</p>
+				<h2 data-i18n="limTitle">Limites et suite</h2>
+				<div class="engine-card-grid engine-card-grid--2">
+					<article class="engine-next-card">
+						<h3 data-i18n="lim1Title">Mixage</h3>
+						<p data-i18n="lim1Text">Il n'existe pas encore de bus audio (musique, effets, moteur) avec leurs propres volumes. C'est la prochaine brique à ajouter au SoundManager.</p>
+					</article>
+					<article class="engine-next-card">
+						<h3 data-i18n="lim2Title">Charge et accélération</h3>
+						<p data-i18n="lim2Text">Le son dépend aujourd'hui du régime seul. Distinguer accélération et décélération (couches « on load » / « off load ») rendrait le moteur bien plus vivant.</p>
+					</article>
+				</div>
+			</section>
+
+			<nav class="engine-pager" aria-label="Pages du moteur" data-i18n-aria="pagerLabel">
+				<a href="./scripting.html"><small data-i18n="pagerPrev">← Précédent</small><span data-i18n="navScripting">Scripting &amp; Hot Reload</span></a>
+				<a class="engine-pager-next" href="./rendering.html"><small data-i18n="pagerNext">Suivant →</small><span data-i18n="navRendering">Rendu</span></a>
+			</nav>
+		</div>
+	</main>
+	<script src="./engine-i18n.js"></script>
+	<script src="../../annexe.js"></script>
+	<script src="./engine-toc.js"></script>
+	<script>
+		/* Illustration : poids des 8 couches (0 à 7 000 tr/min) selon ComputeLayerWeight */
+		(() => {
+			const input = document.getElementById("rpm-input");
+			const output = document.getElementById("rpm-output");
+			const barsRoot = document.getElementById("rpm-bars");
+			if (!input || !output || !barsRoot) {
+				return;
+			}
+
+			const centers = [0, 1000, 2000, 3000, 4000, 5000, 6000, 7000];
+			const weight = (rpm, min, center, max) => {
+				if (rpm < min || rpm > max) return 0;
+				if (rpm === center) return 1;
+				if (rpm < center) return (rpm - min) / (center - min);
+				return 1 - (rpm - center) / (max - center);
+			};
+
+			const bars = centers.map((center) => {
+				const bar = document.createElement("div");
+				bar.className = "rpm-bar";
+				const fill = document.createElement("span");
+				const label = document.createElement("small");
+				label.textContent = `${center / 1000}k`;
+				bar.append(fill, label);
+				barsRoot.append(bar);
+				return fill;
+			});
+
+			const update = () => {
+				const rpm = Number(input.value);
+				const unit = document.documentElement.lang === "en" ? "rpm" : "tr/min";
+				output.textContent = `${rpm.toLocaleString(document.documentElement.lang)} ${unit}`;
+				centers.forEach((center, i) => {
+					const min = i === 0 ? -1 : centers[i - 1];
+					const max = i === centers.length - 1 ? 7001 : centers[i + 1];
+					bars[i].style.height = `${Math.max(weight(rpm, min, center, max) * 100, 1.5)}%`;
+				});
+			};
+
+			input.addEventListener("input", update);
+			const langToggle = document.getElementById("lang-toggle");
+			if (langToggle) {
+				langToggle.addEventListener("click", update);
+			}
+			update();
+		})();
+	</script>
+</body>
+</html>

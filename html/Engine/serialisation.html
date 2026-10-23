@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!-- ================================================================
+     SOUS-PAGE EnigmaEngine : Réflexion & Sérialisation (travail d'équipe)
+     Textes : français dans le HTML, anglais dans ./engine-i18n.js
+     (clés sous "engine-serialisation"). Table des matières : sections [data-toc]
+     ================================================================ -->
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Réflexion RTTR et sérialisation JSON dans EnigmaEngine : scènes, prefabs, matériaux et restauration après le mode play.">
+	<title>Réflexion &amp; Sérialisation | EnigmaEngine</title>
+	<link rel="stylesheet" href="../../css/annexe.css">
+</head>
+<body class="project-detail-page engine-page" data-page="engine-serialisation" data-title-key="pageTitle">
+	<nav class="detail-nav">
+		<div class="detail-nav-inner">
+			<a href="./engine.html" class="back-btn back-btn-minimal">
+				<span class="arrow">&larr;</span>
+				<span class="text" data-i18n="backToEngine">Retour</span>
+			</a>
+			<div class="detail-nav-actions">
+				<button class="lang-toggle" id="lang-toggle" type="button" aria-label="Changer la langue">EN</button>
+				<aside class="engine-toc engine-nav-toc" id="engine-toc">
+					<button class="engine-toc-handle" id="engine-toc-toggle" type="button" aria-expanded="false" aria-controls="engine-toc-nav" aria-label="Afficher la table des matières" data-i18n-aria="tocToggle">
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+					</button>
+					<div class="engine-toc-panel">
+						<p class="engine-toc-eyebrow" data-i18n="tocTitle">Sur cette page</p>
+						<nav class="engine-toc-nav" id="engine-toc-nav" aria-label="Sur cette page" data-i18n-aria="tocTitle"><ol class="engine-toc-list"></ol></nav>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</nav>
+
+	<main class="detail-container engine-layout">
+		<div class="engine-main">
+
+			<header class="engine-subhero engine-section" id="intro" data-toc>
+				<span class="engine-owner engine-owner--team" data-i18n="ownerTeam">Travail d'équipe</span>
+				<p class="engine-section-label" data-i18n="introLabel">RTTR + JSON</p>
+				<h1 data-i18n="title">Réflexion &amp; Sérialisation</h1>
+				<p class="detail-lead" data-i18n="lead">C'est la brique invisible qui fait tenir le reste : grâce à la réflexion, un composant déclaré une fois est à la fois affiché dans l'inspecteur, sauvegardé dans la scène et restauré après le mode play.</p>
+				<ul class="engine-tags">
+					<li>RTTR</li>
+					<li>nlohmann/json</li>
+					<li>UUID</li>
+					<li>Prefabs</li>
+				</ul>
+			</header>
+
+			<section class="engine-panel engine-block engine-section" id="reflection" data-toc>
+				<p class="engine-section-label" data-i18n="reflLabel">Déclarer une fois</p>
+				<h2 data-i18n="reflTitle">Une seule déclaration, trois usages</h2>
+				<p data-i18n-html="reflText1">Chaque composant enregistre ses propriétés dans RTTR, accompagnées d'une métadonnée <code>UIData</code> qui décrit comment l'éditer (champ glissant, entier, case à cocher, vecteur, couleur, référence d'objet...).</p>
+<pre><code>rttr::registration::class_&lt;SoundEmitter&gt;("SoundEmitter")
+    .constructor&lt;&gt;()(rttr::policy::ctor::as_raw_ptr)
+    .property("Volume", &amp;SoundEmitter::GetVolume, &amp;SoundEmitter::SetVolume)
+        (rttr::metadata(UI_DATA_METADATA_KEY, UIData(EUIType::DRAG_FLOAT, 0.f, 20.f)));</code></pre>
+				<div class="engine-card-grid">
+					<article class="engine-module-card">
+						<h3 data-i18n="use1Title">Inspecteur</h3>
+						<p data-i18n="use1Text">L'éditeur parcourt les propriétés et choisit le widget d'après la métadonnée, sans code d'UI propre au composant.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="use2Title">Sauvegarde</h3>
+						<p data-i18n="use2Text">Le sérialiseur parcourt les mêmes propriétés, récursivement, pour écrire et relire le JSON.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="use3Title">Scripts</h3>
+						<p data-i18n="use3Text">Les scripts utilisateur passent par le même chemin, avec une réflexion générée à la compilation.</p>
+					</article>
+				</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="formats" data-toc>
+				<p class="engine-section-label" data-i18n="fmtLabel">Fichiers</p>
+				<h2 data-i18n="fmtTitle">Ce qui est sauvegardé</h2>
+				<div class="engine-table-wrap">
+					<table class="engine-table">
+						<thead>
+							<tr>
+								<th data-i18n="fmtColFile">Fichier</th>
+								<th data-i18n="fmtColContent">Contenu</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr><td><code>.scene</code></td><td data-i18n="fmtScene">Hiérarchie des objets et leurs composants, skybox, position de la caméra d'édition.</td></tr>
+							<tr><td><code>.script</code></td><td data-i18n="fmtScript">Scripts attachés et valeurs de leurs propriétés, rangés par UUID d'objet.</td></tr>
+							<tr><td><code>.prefab</code></td><td data-i18n="fmtPrefab">Un objet et tous ses enfants, réinstanciable dans n'importe quelle scène.</td></tr>
+							<tr><td><code>.mat</code></td><td data-i18n="fmtMat">Paramètres et textures d'un matériau, édités dans le material editor.</td></tr>
+						</tbody>
+					</table>
+				</div>
+				<p data-i18n-html="fmtText1">Les scripts sont volontairement stockés à part : ils vivent dans une DLL rechargeable, et les séparer de la scène permet de les réattacher après un hot reload sans recharger le reste.</p>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="play-mode" data-toc>
+				<p class="engine-section-label" data-i18n="playLabel">Mode play</p>
+				<h2 data-i18n="playTitle">Jouer sans rien casser</h2>
+				<p data-i18n="playText1">Comme dans Unity, tout ce qui change pendant une partie de test (positions, valeurs de scripts, objets détruits) doit disparaître quand on arrête le jeu.</p>
+				<ol class="engine-flow">
+					<li data-i18n-html="playStep1"><strong>Play</strong><code>SaveBeforePlay</code> écrit la scène dans un fichier temporaire.</li>
+					<li data-i18n-html="playStep2"><strong>Partie</strong>Physique, scripts et audio modifient librement la scène.</li>
+					<li data-i18n-html="playStep3"><strong>Stop</strong><code>ResetAfterPlay</code> vide la scène et la reconstruit depuis le fichier temporaire.</li>
+					<li data-i18n-html="playStep4"><strong>Réattache</strong>Les scripts sont recollés aux objets, puis le fichier temporaire est supprimé.</li>
+				</ol>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="limits" data-toc>
+				<p class="engine-section-label" data-i18n="limLabel">Recul</p>
+				<h2 data-i18n="limTitle">Limites et suite</h2>
+				<div class="engine-card-grid engine-card-grid--2">
+					<article class="engine-next-card">
+						<h3 data-i18n="lim1Title">Format binaire</h3>
+						<p data-i18n="lim1Text">Le JSON est lisible et pratique à déboguer, mais lourd pour un build final. Un format binaire pour l'exécutable de jeu accélérerait le chargement.</p>
+					</article>
+					<article class="engine-next-card">
+						<h3 data-i18n="lim2Title">Versionnage</h3>
+						<p data-i18n="lim2Text">Les fichiers ne portent pas de numéro de version : renommer une propriété peut rendre une ancienne scène illisible. Un système de migration serait la prochaine étape.</p>
+					</article>
+				</div>
+			</section>
+
+			<nav class="engine-pager" aria-label="Pages du moteur" data-i18n-aria="pagerLabel">
+				<a href="./rendering.html"><small data-i18n="pagerPrev">← Précédent</small><span data-i18n="navRendering">Rendu</span></a>
+				<a class="engine-pager-next" href="./tools.html"><small data-i18n="pagerNext">Suivant →</small><span data-i18n="navTools">Éditeur &amp; Outils</span></a>
+			</nav>
+		</div>
+	</main>
+	<script src="./engine-i18n.js"></script>
+	<script src="../../annexe.js"></script>
+	<script src="./engine-toc.js"></script>
+</body>
+</html>

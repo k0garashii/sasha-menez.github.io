@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<!-- ================================================================
+     SOUS-PAGE EnigmaEngine : Éditeur & Outils (équipe + undo/redo perso)
+     Textes : français dans le HTML, anglais dans ./engine-i18n.js
+     (clés sous "engine-tools"). Table des matières : sections [data-toc]
+     ================================================================ -->
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="L'éditeur d'EnigmaEngine : panneaux ImGui, gizmos, raccourcis, undo / redo basé sur des UUID et duplication d'objets.">
+	<title>Éditeur &amp; Outils | EnigmaEngine</title>
+	<link rel="stylesheet" href="../../css/annexe.css">
+</head>
+<body class="project-detail-page engine-page" data-page="engine-tools" data-title-key="pageTitle">
+	<nav class="detail-nav">
+		<div class="detail-nav-inner">
+			<a href="./engine.html" class="back-btn back-btn-minimal">
+				<span class="arrow">&larr;</span>
+				<span class="text" data-i18n="backToEngine">Retour</span>
+			</a>
+			<div class="detail-nav-actions">
+				<button class="lang-toggle" id="lang-toggle" type="button" aria-label="Changer la langue">EN</button>
+				<aside class="engine-toc engine-nav-toc" id="engine-toc">
+					<button class="engine-toc-handle" id="engine-toc-toggle" type="button" aria-expanded="false" aria-controls="engine-toc-nav" aria-label="Afficher la table des matières" data-i18n-aria="tocToggle">
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+						<span class="engine-toc-handle-bar" aria-hidden="true"></span>
+					</button>
+					<div class="engine-toc-panel">
+						<p class="engine-toc-eyebrow" data-i18n="tocTitle">Sur cette page</p>
+						<nav class="engine-toc-nav" id="engine-toc-nav" aria-label="Sur cette page" data-i18n-aria="tocTitle"><ol class="engine-toc-list"></ol></nav>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</nav>
+
+	<main class="detail-container engine-layout">
+		<div class="engine-main">
+
+			<header class="engine-subhero engine-section" id="intro" data-toc>
+				<span class="engine-owner engine-owner--team" data-i18n="ownerMixed">Équipe + perso</span>
+				<p class="engine-section-label" data-i18n="introLabel">ImGui docking</p>
+				<h1 data-i18n="title">Éditeur &amp; Outils</h1>
+				<p class="detail-lead" data-i18n="lead">Un moteur ne sert à rien si on ne peut pas construire de scène avec. L'éditeur est un exécutable à part entière, avec les panneaux qu'on attend d'Unity ou d'Unreal. J'y ai ajouté l'undo / redo, les identifiants uniques et la duplication.</p>
+				<ul class="engine-tags">
+					<li>ImGui</li>
+					<li>ImGuizmo</li>
+					<li>Undo / Redo</li>
+					<li>UUID</li>
+				</ul>
+			</header>
+
+			<section class="engine-panel engine-block engine-section" id="panels" data-toc>
+				<p class="engine-section-label" data-i18n="panelsLabel">Travail d'équipe</p>
+				<h2 data-i18n="panelsTitle">Les panneaux de l'éditeur</h2>
+				<figure class="engine-figure engine-shot">
+					<img src="img/editor-screen1.png" alt="L'éditeur d'EnigmaEngine avec la hiérarchie, le viewport, l'inspecteur et le content browser" data-i18n-alt="panelsFigAlt" class="rendered-img" loading="lazy" decoding="async">
+				</figure>
+				<div class="engine-card-grid">
+					<article class="engine-module-card">
+						<h3 data-i18n="panel1Title">Hiérarchie</h3>
+						<p data-i18n="panel1Text">Arbre de la scène, création, sélection et suppression d'objets.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="panel2Title">Viewport &amp; Game</h3>
+						<p data-i18n="panel2Text">Vue d'édition avec caméra libre, gizmos et picking, et vue de la caméra de jeu.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="panel3Title">Inspecteur</h3>
+						<p data-i18n="panel3Text">Composants et propriétés générés depuis la réflexion RTTR, y compris pour les scripts.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="panel4Title">Content browser</h3>
+						<p data-i18n="panel4Text">Navigation dans les assets : modèles, matériaux, prefabs, scènes, sons.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="panel5Title">Console</h3>
+						<p data-i18n="panel5Text">Logs du moteur et retours de compilation des scripts.</p>
+					</article>
+					<article class="engine-module-card">
+						<h3 data-i18n="panel6Title">Material editor</h3>
+						<p data-i18n="panel6Text">Édition des matériaux PBR et de leurs textures, sauvegardés en <code>.mat</code>.</p>
+					</article>
+				</div>
+				<figure class="engine-figure engine-shot">
+					<img src="img/editor-material-screen3.png" alt="Édition d'un matériau dans EnigmaEngine" data-i18n-alt="materialFigAlt" class="rendered-img" loading="lazy" decoding="async">
+				</figure>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="undo" data-toc>
+				<span class="engine-owner" data-i18n="ownerPersonal">Travail personnel</span>
+				<p class="engine-section-label" data-i18n="undoLabel">Ctrl + Z / Ctrl + Y</p>
+				<h2 data-i18n="undoTitle">Undo / Redo</h2>
+				<p data-i18n-html="undoText1">Chaque modification de la scène enregistre une <code>Action</code> qui sait l'annuler : une closure, l'UUID de l'objet concerné et, si besoin, un instantané JSON. Les actions couvrent la création et la suppression d'objets, le parentage, les transforms (position, rotation, échelle) et l'ajout ou la suppression de composants.</p>
+				<p data-i18n-html="undoText2">L'astuce est dans la symétrie. Pendant un undo, le gestionnaire passe en contexte <code>REDO</code> : l'action inverse, en modifiant la scène, enregistre elle-même son propre inverse… dans la pile de redo. Il n'y a donc pas de code « refaire » à écrire pour chaque opération.</p>
+<pre><code>void Shortcut::Undo()
+{
+    if (!undoActions.empty())
+    {
+        context = REDO;              // the inverse action records itself as a redo
+        Action action = undoActions.back();
+        undoActions.pop_back();
+        action.action();
+        context = UNDO;
+    }
+}</code></pre>
+				<div class="engine-card-grid engine-card-grid--2">
+					<article class="engine-contrib-card">
+						<h3 data-i18n="uuidTitle">Pourquoi des UUID</h3>
+						<p data-i18n="uuidText">Annuler une suppression recrée l'objet : son adresse mémoire change. Une action ne garde donc jamais de pointeur, mais l'identifiant 128 bits de l'objet, qui survit aussi à la sauvegarde et au hot reload.</p>
+					</article>
+					<article class="engine-contrib-card">
+						<h3 data-i18n="snapTitle">Instantanés JSON</h3>
+						<p data-i18n="snapText">Une suppression sérialise l'objet et ses enfants avant de les détruire. L'annuler revient à le désérialiser, en réutilisant le sérialiseur de scène.</p>
+					</article>
+				</div>
+				<div class="engine-note" data-i18n-html="dupNote"><strong>Duplication (Ctrl + D)</strong> : elle réutilise aussi le sérialiseur. L'objet sélectionné est sérialisé avec ses enfants et ses composants, puis désérialisé sous le même parent. Les valeurs des scripts ne sont pas encore copiées.</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="shortcuts" data-toc>
+				<p class="engine-section-label" data-i18n="keysLabel">Prise en main</p>
+				<h2 data-i18n="keysTitle">Raccourcis</h2>
+				<div class="engine-table-wrap">
+					<table class="engine-table">
+						<thead>
+							<tr>
+								<th data-i18n="keysColAction">Action</th>
+								<th data-i18n="keysColInput">Entrée</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr><td data-i18n="key1">Caméra libre</td><td data-i18n="key1Input">Clic gauche maintenu + ZQSD / A E</td></tr>
+							<tr><td data-i18n="key2">Panoramique</td><td data-i18n="key2Input">Molette maintenue</td></tr>
+							<tr><td data-i18n="key3">Gizmo translation / rotation / échelle</td><td>W / R / E</td></tr>
+							<tr><td data-i18n="key4">Sauvegarder / nouvelle scène</td><td>Ctrl + S / Ctrl + N</td></tr>
+							<tr><td data-i18n="key5">Annuler / rétablir</td><td>Ctrl + Z / Ctrl + Y</td></tr>
+							<tr><td data-i18n="key6">Dupliquer</td><td>Ctrl + D</td></tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<section class="engine-panel engine-block engine-section" id="limits" data-toc>
+				<p class="engine-section-label" data-i18n="limLabel">Recul</p>
+				<h2 data-i18n="limTitle">Limites et suite</h2>
+				<div class="engine-card-grid engine-card-grid--2">
+					<article class="engine-next-card">
+						<h3 data-i18n="lim1Title">Scripts dans l'historique</h3>
+						<p data-i18n="lim1Text">Les modifications de valeurs de scripts ne sont pas encore annulables, car leurs types vivent dans la DLL rechargeable.</p>
+					</article>
+					<article class="engine-next-card">
+						<h3 data-i18n="lim2Title">Historique borné</h3>
+						<p data-i18n="lim2Text">Les piles ne sont pas limitées en taille et une nouvelle action ne vide pas encore la pile de redo. Ce sont les deux prochains correctifs.</p>
+					</article>
+				</div>
+			</section>
+
+			<nav class="engine-pager" aria-label="Pages du moteur" data-i18n-aria="pagerLabel">
+				<a href="./serialisation.html"><small data-i18n="pagerPrev">← Précédent</small><span data-i18n="navSerialisation">Réflexion &amp; Sérialisation</span></a>
+				<a class="engine-pager-next" href="./ai-chat-action.html"><small data-i18n="pagerNext">Suivant →</small><span data-i18n="navAi">IA : chat et actions</span></a>
+			</nav>
+		</div>
+	</main>
+	<script src="./engine-i18n.js"></script>
+	<script src="../../annexe.js"></script>
+	<script src="./engine-toc.js"></script>
+</body>
+</html>
