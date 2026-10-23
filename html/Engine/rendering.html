@@ -43,7 +43,7 @@
 				<span class="engine-owner engine-owner--team" data-i18n="ownerTeam">Travail d'équipe</span>
 				<p class="engine-section-label" data-i18n="introLabel">OpenGL 4.6</p>
 				<h1 data-i18n="title">Rendu</h1>
-				<p class="detail-lead" data-i18n="lead">Le rendu est une brique commune du projet. Il repose sur une couche d'abstraction maison (RHI) et sur un pipeline différé physiquement réaliste, pensé pour afficher des voitures et un circuit de manière crédible.</p>
+				<p class="detail-lead" data-i18n="lead">Le rendu a été conçu par Eliott Blesz, qui avait en charge toute la partie graphique du projet. Il repose sur une couche d'abstraction maison (RHI) et sur un pipeline différé physiquement réaliste, pensé pour afficher des voitures et un circuit de manière crédible.</p>
 				<ul class="engine-tags">
 					<li>RHI</li>
 					<li>Deferred</li>
@@ -61,7 +61,7 @@
 				<h2 data-i18n="rhiTitle">Un RHI maison</h2>
 				<p data-i18n-html="rhiText1">Le moteur ne fait jamais d'appel OpenGL en dehors du RHI (<em>Render Hardware Interface</em>). Le renderer manipule des interfaces inspirées de Vulkan (<code>IDevice</code>, <code>ICommandBuffer</code>, <code>IPipeline</code>, <code>IDescriptor</code>, <code>IFramebuffer</code>, <code>ISwapChain</code>...) et le module <code>gl_core</code> en fournit l'implémentation OpenGL.</p>
 				<p data-i18n="rhiText2">Chaque passe est décrite comme un pipeline : shaders, format des sommets, mode de culling, profondeur et blending sont déclarés une fois, à la création, plutôt que modifiés à la volée pendant le rendu.</p>
-				<div class="engine-note" data-i18n="rhiNote">Aujourd'hui, OpenGL est le seul backend. L'abstraction est en place pour en accueillir un second (Vulkan), mais ce travail reste à faire.</div>
+				<div class="engine-note" data-i18n="rhiNote">Tout le projet a été réalisé sur le backend OpenGL du RHI. L'objectif actuel est de faire passer le moteur sur une base Vulkan, en s'appuyant sur cette abstraction.</div>
 			</section>
 
 			<section class="engine-panel engine-block engine-section" id="frame" data-toc>
@@ -118,8 +118,8 @@
 				<h2 data-i18n="limTitle">Limites et suite</h2>
 				<div class="engine-card-grid engine-card-grid--2">
 					<article class="engine-next-card">
-						<h3 data-i18n="lim1Title">Un deuxième backend</h3>
-						<p data-i18n="lim1Text">Le RHI a été pensé pour Vulkan. L'implémenter validerait vraiment l'abstraction, qui n'a pour l'instant été éprouvée que sur OpenGL.</p>
+						<h3 data-i18n="lim1Title">Le passage à Vulkan</h3>
+						<p data-i18n="lim1Text">C'est le chantier en cours : le RHI a été pensé avec des concepts Vulkan, et cette migration va vraiment valider l'abstraction, éprouvée jusqu'ici sur OpenGL.</p>
 					</article>
 					<article class="engine-next-card">
 						<h3 data-i18n="lim2Title">Moins de draw calls</h3>

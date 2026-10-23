@@ -59,7 +59,14 @@ const translations = {
         "p10-title": "Stagiaire",
         "p10-desc": "Projet à développer.",
         "p11-title": "Création d'un moteur de jeu",
-        "p11-desc": "Recréer les fonctionnalités d'un moteur de jeu style Unity / Unreal dans le but de créer un jeu de voiture."
+        "p11-desc": "Recréer les fonctionnalités d'un moteur de jeu style Unity / Unreal dans le but de créer un jeu de voiture.",
+        "duration-10w": "10 semaines",
+        "featured-label": "Projet phare",
+        "featured-desc": "Un moteur de jeu 3D en C++ développé à trois, avec son éditeur, son rendu, sa physique et son scripting, éprouvé par une démo de course jouable.",
+        "featured-point-1": "Physique de véhicule construite sur Jolt",
+        "featured-point-2": "Scripts C++ rechargés à chaud depuis l'éditeur",
+        "featured-point-3": "Son moteur mixé selon le régime",
+        "featured-cta": "Découvrir le moteur"
     },
     en: {
         "nav-projects": "Projects",
@@ -120,7 +127,14 @@ const translations = {
         "p10-title": "Internship Project",
         "p10-desc": "Project to be developed.",
         "p11-title": "Game Engine Creation",
-        "p11-desc": "Project to be developed."
+        "p11-desc": "Rebuilding the features of a Unity / Unreal-style game engine in order to make a car game.",
+        "duration-10w": "10 weeks",
+        "featured-label": "Featured project",
+        "featured-desc": "A 3D game engine in C++ built by a team of three, with its own editor, rendering, physics and scripting, proven by a playable racing demo.",
+        "featured-point-1": "Vehicle physics built on Jolt",
+        "featured-point-2": "C++ scripts hot-reloaded from the editor",
+        "featured-point-3": "Engine sound mixed by RPM",
+        "featured-cta": "Explore the engine"
     }
 };
 

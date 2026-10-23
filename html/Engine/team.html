@@ -52,11 +52,11 @@
 				<div class="engine-card-grid">
 					<article class="engine-module-card">
 						<h3>Eliott Blesz</h3>
-						<p data-i18n="member1">Développeur moteur</p>
+						<p data-i18n="member1">Graphisme : RHI, shaders, rendu, éditeur, loaders</p>
 					</article>
 					<article class="engine-module-card">
 						<h3>Ugo Szemberg</h3>
-						<p data-i18n="member2">Développeur moteur</p>
+						<p data-i18n="member2">Architecture, réflexion, sérialisation, multithreading, debug, build</p>
 					</article>
 					<article class="engine-module-card">
 						<h3>Sasha Menez</h3>
@@ -92,11 +92,9 @@
 					<article class="engine-contrib-card">
 						<span class="engine-owner engine-owner--team" data-i18n="ownerTeam">Travail d'équipe</span>
 						<ul data-i18n-html="teamList">
-							<li><a href="./rendering.html">Rendu</a> : RHI, pipeline différé, ombres, post-process</li>
-							<li><a href="./tools.html">Éditeur</a> : panneaux ImGui, gizmos, material editor</li>
-							<li><a href="./serialisation.html">Réflexion &amp; sérialisation</a> : RTTR, scènes, prefabs</li>
-							<li>Ressources, maths, entrées, réseau ENet</li>
-							<li>Démo de course : voitures, circuit, menus, caméras</li>
+							<li><strong>Eliott Blesz</strong> : <a href="./rendering.html">rendu</a> (RHI OpenGL, shaders, pipeline), <a href="./tools.html">éditeur</a>, loaders de ressources</li>
+							<li><strong>Ugo Szemberg</strong> : architecture du projet, <a href="./serialisation.html">réflexion &amp; sérialisation</a>, multithreading, debug, build CMake</li>
+							<li><strong>En commun</strong> : maths, entrées, réseau ENet, démo de course (voitures, circuit, menus, caméras)</li>
 						</ul>
 					</article>
 				</div>
@@ -112,11 +110,11 @@
 					</article>
 					<article class="engine-module-card">
 						<h3 data-i18n="youngTitle">Encore jeune</h3>
-						<p data-i18n="youngText">Le RHI n'a qu'un backend, le réseau synchronise positions et rotations sans prédiction, et l'architecture reste une hiérarchie de composants plutôt qu'un vrai ECS.</p>
+						<p data-i18n="youngText">Le RHI n'a qu'un backend (le passage à Vulkan est en cours), le réseau synchronise positions et rotations sans prédiction, et l'architecture reste une hiérarchie de composants plutôt qu'un vrai ECS.</p>
 					</article>
 					<article class="engine-module-card">
 						<h3 data-i18n="nextTitle">Ensuite</h3>
-						<p data-i18n="nextText">Actions de l'IA, layers de collision configurables, requêtes physiques pour les scripts, bus audio et un second backend graphique.</p>
+						<p data-i18n="nextText">Actions de l'IA, layers de collision configurables, requêtes physiques pour les scripts, bus audio et une base Vulkan pour le rendu.</p>
 					</article>
 				</div>
 				<div class="engine-note" data-i18n="lessonNote">Ce que je retiens : un moteur se juge à ce qu'il permet de produire. Chaque brique que j'ai prise en charge a été pensée pour servir la démo de course, et c'est cette contrainte qui a donné la forme du code.</div>

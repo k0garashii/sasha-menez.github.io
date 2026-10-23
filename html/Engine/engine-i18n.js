@@ -249,7 +249,7 @@ window.extraTranslations = {
             introLabel: "OpenGL 4.6",
             title: "Rendering",
             lead:
-                "Rendering is a shared part of the project. It relies on a custom abstraction layer (RHI) and on a physically based deferred pipeline, designed to show cars and a race track convincingly.",
+                "Rendering was designed by Eliott Blesz, who was in charge of the whole graphics side of the project. It relies on a custom abstraction layer (RHI) and on a physically based deferred pipeline, designed to show cars and a race track convincingly.",
             rhiLabel: "Abstraction",
             rhiTitle: "A custom RHI",
             rhiText1:
@@ -257,7 +257,7 @@ window.extraTranslations = {
             rhiText2:
                 "Each pass is described as a pipeline: shaders, vertex format, culling mode, depth and blending are declared once, at creation, instead of being changed on the fly while rendering.",
             rhiNote:
-                "Today, OpenGL is the only backend. The abstraction is ready to host a second one (Vulkan), but that work remains to be done.",
+                "The whole project was built on the RHI's OpenGL backend. The current goal is to move the engine onto a Vulkan base, building on this abstraction.",
             frameLabel: "One frame",
             frameTitle: "The pipeline, pass by pass",
             frameStep1: "<strong>Shadows</strong>Shadow maps for directional, spot and point lights.",
@@ -286,9 +286,9 @@ window.extraTranslations = {
             shadow2Text: "One perspective shadow map per spot, sampled in the lighting pass.",
             shadow3Title: "Point",
             shadow3Text: "Depth cubemaps rendered in a single pass with a geometry shader that duplicates geometry onto the six faces.",
-            lim1Title: "A second backend",
+            lim1Title: "Moving to Vulkan",
             lim1Text:
-                "The RHI was designed with Vulkan in mind. Implementing it would truly validate the abstraction, which has only been tested on OpenGL so far.",
+                "This is the work in progress: the RHI was designed around Vulkan concepts, and this migration will truly validate the abstraction, proven on OpenGL so far.",
             lim2Title: "Fewer draw calls",
             lim2Text:
                 "Off-screen objects are already discarded by a frustum / AABB test, and AABBs are only recomputed when the transform changes. Next: instancing and sorting draw calls by material."
@@ -298,7 +298,7 @@ window.extraTranslations = {
             introLabel: "RTTR + JSON",
             title: "Reflection & Serialization",
             lead:
-                "This is the invisible piece that holds the rest together: thanks to reflection, a component declared once is shown in the inspector, saved in the scene and restored after play mode.",
+                "Designed by Ugo Szemberg along with the project architecture, this is the invisible piece that holds the rest together: thanks to reflection, a component declared once is shown in the inspector, saved in the scene and restored after play mode.",
             reflLabel: "Declare once",
             reflTitle: "One declaration, three uses",
             reflText1:
@@ -339,7 +339,7 @@ window.extraTranslations = {
             introLabel: "ImGui docking",
             title: "Editor & Tools",
             lead:
-                "An engine is useless if you cannot build a scene with it. The editor is a standalone executable, with the panels you would expect from Unity or Unreal. I added undo / redo, unique identifiers and duplication to it.",
+                "An engine is useless if you cannot build a scene with it. The editor, built by Eliott Blesz, is a standalone executable, with the panels you would expect from Unity or Unreal. I added undo / redo, unique identifiers and duplication to it.",
             panelsLabel: "Team work",
             panelsTitle: "The editor panels",
             panelsFigAlt: "The EnigmaEngine editor with the hierarchy, viewport, inspector and content browser",
@@ -421,8 +421,8 @@ window.extraTranslations = {
                 "EnigmaEngine was built by three people, from March 10 to May 20, 2026. This page clearly separates what I built from what the team built together, then reviews what is solid, what is young and what comes next.",
             teamLabel: "Organization",
             teamTitle: "The team and how it worked",
-            member1: "Engine developer",
-            member2: "Engine developer",
+            member1: "Graphics: RHI, shaders, rendering, editor, loaders",
+            member2: "Architecture, reflection, serialization, multithreading, debug, build",
             member3: "Physics, scripting, audio, tools",
             flow1Title: "Git and branches",
             flow1Text:
@@ -435,7 +435,7 @@ window.extraTranslations = {
             mineList:
                 "<li><a href=\"./physics.html\">Physics</a>: Jolt integration, Physicalbody, colliders, collisions to scripts, VehicleController</li><li><a href=\"./scripting.html\">Scripting &amp; hot reload</a>: generated reflection, DLL compilation and reloading</li><li><a href=\"./audio.html\">Audio</a>: miniaudio system and engine sound from RPM layers</li><li><a href=\"./tools.html\">Tools</a> (after the project): UUIDs, undo / redo, duplication</li><li><a href=\"./ai-chat-action.html\">AI</a> (after the project): local AI console</li>",
             teamList:
-                "<li><a href=\"./rendering.html\">Rendering</a>: RHI, deferred pipeline, shadows, post-processing</li><li><a href=\"./tools.html\">Editor</a>: ImGui panels, gizmos, material editor</li><li><a href=\"./serialisation.html\">Reflection &amp; serialization</a>: RTTR, scenes, prefabs</li><li>Resources, math, input, ENet networking</li><li>Racing demo: cars, track, menus, cameras</li>",
+                "<li><strong>Eliott Blesz</strong>: <a href=\"./rendering.html\">rendering</a> (OpenGL RHI, shaders, pipeline), <a href=\"./tools.html\">editor</a>, resource loaders</li><li><strong>Ugo Szemberg</strong>: project architecture, <a href=\"./serialisation.html\">reflection &amp; serialization</a>, multithreading, debug, CMake build</li><li><strong>Shared</strong>: math, input, ENet networking, racing demo (cars, track, menus, cameras)</li>",
             statusLabel: "Honest review",
             statusTitle: "Where the engine stands",
             solidTitle: "Solid",
@@ -443,10 +443,10 @@ window.extraTranslations = {
                 "Deferred PBR rendering, Jolt and vehicle physics, hot reload, editor, serialization and play mode: all of it already serves the playable demo.",
             youngTitle: "Still young",
             youngText:
-                "The RHI has a single backend, networking syncs positions and rotations without prediction, and the architecture remains a component hierarchy rather than a true ECS.",
+                "The RHI has a single backend (the move to Vulkan is underway), networking syncs positions and rotations without prediction, and the architecture remains a component hierarchy rather than a true ECS.",
             nextTitle: "Next",
             nextText:
-                "AI actions, configurable collision layers, physics queries for scripts, audio buses and a second graphics backend.",
+                "AI actions, configurable collision layers, physics queries for scripts, audio buses and a Vulkan base for rendering.",
             lessonNote:
                 "What I take away: an engine is judged by what it lets you make. Every piece I handled was designed to serve the racing demo, and that constraint is what shaped the code."
         },
